@@ -1,0 +1,66 @@
+generated: '2026-08-02'
+method: searched
+source: https://afero-docs.readthedocs.io/en/latest/RelNotes/
+url: https://afero-docs.readthedocs.io/en/latest/RelNotes/
+scheme: per-component release trains (R<major>.<minor>[.<patch>]) with release dates
+current: Afero Developer Hub R1.1.673
+note: Afero splits its changelog across nine per-component release-note pages rather than one API changelog.
+  There is no changelog for the Afero Cloud API itself; the latest dated entry on any stream is January
+  2020.
+entries:
+- component: Developer Hub
+  version: R1.1.673
+  date: '2020-01-28'
+  breaking: false
+  highlights:
+  - Debian packaging support for Raspbian and Raspbian Lite Buster.
+  - Bluetooth Low Energy connection-management fixes in Beetle.
+  - Hubby brought up to date with new Afero Cloud onboarding.
+  - Afero Enterprise Mode supported and enabled by default.
+  url: https://afero-docs.readthedocs.io/en/latest/RelNotes/
+- component: Profile Editor
+  version: R1.9
+  date: '2019-09-11'
+  breaking: false
+  highlights:
+  - Support added for the Plumo-2C and Plumo-2D modules.
+  url: https://afero-docs.readthedocs.io/en/latest/RelNotes-APE/
+- component: Profile Editor
+  version: R1.8
+  date: '2019-05-30'
+  breaking: false
+  highlights:
+  - Support for the Plumo-2C (MT7697) and Plumo-2D (ESP32) modules.
+  - New attribute features.
+  url: https://afero-docs.readthedocs.io/en/latest/RelNotes-APE/
+- component: Console
+  version: R1.3
+  date: '2019-04-24'
+  breaking: false
+  highlights:
+  - User Manager — partners can invite Console users with explicitly assigned privileges, editable and
+    revocable.
+  - Partner switching for users belonging to more than one partner.
+  url: https://afero-docs.readthedocs.io/en/latest/RelNotes-Console/
+- component: Console
+  version: R1.2
+  date: '2019-03-27'
+  breaking: false
+  highlights:
+  - Data Explorer — SQL-92 compliant queries across all device historical data.
+  url: https://afero-docs.readthedocs.io/en/latest/RelNotes-Console/
+- component: Console
+  version: R1.1
+  date: '2018-11-19'
+  breaking: false
+  highlights:
+  - Device Listing window with detail and links into the Device Data Viewer.
+  - Attribute History pane showing an attribute's update history over the past month.
+  url: https://afero-docs.readthedocs.io/en/latest/RelNotes-Console/
+- component: OTA Manager
+  version: R1.0
+  date: '2018-08-09'
+  breaking: false
+  highlights:
+  - First release of the OTA Manager for uploading and deploying MCU firmware images to developer devices.
+  url: https://afero-docs.readthedocs.io/en/latest/RelNotes-OTAMgr/

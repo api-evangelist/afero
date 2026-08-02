@@ -1,0 +1,1804 @@
+openapi: 3.1.0
+info:
+  title: Afero Cloud API
+  version: v1
+  description: 'The Afero Cloud API is the RESTful control plane for the Afero IoT platform: it lists
+    the devices and users on an Afero account, reports real-time device state, executes attribute read/write
+    actions against connected devices, and manages the over-the-air (OTA) firmware pipeline — firmware
+    types, firmware pool images, binary upload, device-type associations, firmware tags, and firmware
+    pushes. All requests are made over TLS to https://api.afero.io and are authenticated with an OAuth
+    2.0 bearer access token obtained from the /oauth/token endpoint using the partner OAuth Client ID
+    and Client Secret issued in the Afero Profile Editor. This OpenAPI was DERIVED by API Evangelist from
+    Afero''s public developer documentation (resource URLs, HTTP methods, request headers, request payload
+    model schemas, response model schemas and examples transcribed verbatim from the docs); it is NOT
+    a provider-published specification. Afero publishes no machine-readable spec: https://api.afero.io/api-docs
+    and https://api.afero.io/v1/openapi.json both answer HTTP 401 (authenticated access required), probed
+    2026-08-02.'
+  contact:
+    name: Afero Developer Documentation
+    url: https://afero-docs.readthedocs.io/en/latest/CloudAPIs/
+    email: sales@afero.io
+  license:
+    name: Afero Developer Terms of Service
+    url: https://cdn.afero.io/tos/developer/v1/developer.html
+  x-apievangelist-derived-from: https://afero-docs.readthedocs.io/en/latest/CloudAPIs/
+  x-apievangelist-derived-on: '2026-08-02'
+  x-apievangelist-provider-published: false
+externalDocs:
+  description: Afero Developer Docs
+  url: https://afero-docs.readthedocs.io/en/latest/
+servers:
+- url: https://api.afero.io
+  description: Afero Cloud API production base URL
+tags:
+- name: Authentication
+  description: OAuth 2.0 token issuance for Afero Cloud API access.
+  externalDocs:
+    url: https://afero-docs.readthedocs.io/en/latest/API-OAuthEndpoints/
+- name: Users
+  description: The authenticated end-user, their account and partner access, and terms of service.
+  externalDocs:
+    url: https://afero-docs.readthedocs.io/en/latest/API-UserEndpoints/
+- name: Devices
+  description: 'Afero devices on an account: listing, real-time state, attribute actions and naming.'
+  externalDocs:
+    url: https://afero-docs.readthedocs.io/en/latest/API-DeviceEndpoints/
+- name: OTA
+  description: 'Over-the-air firmware management: firmware types, the firmware pool, binaries, device
+    type associations, tags and pushes.'
+  externalDocs:
+    url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints/
+paths:
+  /oauth/token:
+    post:
+      operationId: createAccessToken
+      tags:
+      - Authentication
+      summary: OAuth Authentication
+      description: 'Authenticate an end-user and generate an OAuth 2.0 access token used to authenticate
+        subsequent requests on behalf of that end-user. The Authorization header is HTTP Basic: the string
+        `Basic ` followed by the Base64 encoding of `<OAuth Client ID>:<OAuth Client Secret>`. The returned
+        access token expires (the docs note approximately four hours; the `expires_in` value is in seconds).'
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OAuthEndpoints/
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+      responses:
+        '200':
+          description: An OAuth 2.0 access token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessToken'
+              example:
+                access_token: 12345678-90AB-CDEF-0123-FED789CBA432
+                token_type: bearer
+                expires_in: 16086
+                scope: partner account
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+      - basicAuth: []
+  /v1/users/me:
+    get:
+      operationId: getCurrentUser
+      tags:
+      - Users
+      summary: Get information about a user
+      description: 'Returns user-specific information for the authenticated end-user: the accounts the
+        user can access and the privileges held on each, the sign-in credential, the partner accounts
+        and partner privileges held, and the terms-of-service versions accepted or awaiting acceptance.'
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-UserEndpoints/
+      responses:
+        '200':
+          description: The authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+      - bearerAuth: []
+  /v1/accounts/{accountId}/devices:
+    get:
+      operationId: listDevices
+      tags:
+      - Devices
+      summary: List current devices and state information
+      description: Lists the devices associated with the specified account. The response can be enriched
+        with the `expansions` query parameter to include device state, device tags, or device attributes.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-DeviceEndpoints/
+      parameters:
+      - name: accountId
+        in: path
+        description: The Afero account ID.
+        schema:
+          type: string
+        required: true
+      - name: expansions
+        in: query
+        description: Selects the additional information returned for each device. One of `state`, `tags`
+          or `attributes`.
+        schema:
+          type: string
+          enum:
+          - state
+          - tags
+          - attributes
+        required: false
+      responses:
+        '200':
+          description: The devices on the account.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Device'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+  /v1/accounts/{accountId}/devices/{deviceId}:
+    get:
+      operationId: getDevice
+      tags:
+      - Devices
+      summary: Get a single device and its state information
+      description: Returns a single device on the specified account. The response can be enriched with
+        the `expansions` query parameter to include device state, device tags, or device attributes.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-DeviceEndpoints/
+      parameters:
+      - name: accountId
+        in: path
+        description: The Afero account ID.
+        schema:
+          type: string
+        required: true
+      - name: deviceId
+        in: path
+        description: The Afero device ID.
+        schema:
+          type: string
+        required: true
+      - name: expansions
+        in: query
+        description: Selects the additional information returned for each device. One of `state`, `tags`
+          or `attributes`.
+        schema:
+          type: string
+          enum:
+          - state
+          - tags
+          - attributes
+        required: false
+      responses:
+        '200':
+          description: The device.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+  /v1/accounts/{accountId}/devices/{deviceId}/actions:
+    post:
+      operationId: executeDeviceAction
+      tags:
+      - Devices
+      summary: Execute an action on a device
+      description: 'Submits an attribute read or write against a device by attribute ID. `data` must be
+        hexadecimal encoded, little endian. Read and write commands are ASYNCHRONOUS: the call may return
+        before the read/write takes place, and if the device is offline the request may never complete.'
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-DeviceEndpoints/
+      parameters:
+      - name: accountId
+        in: path
+        description: The Afero account ID.
+        schema:
+          type: string
+        required: true
+      - name: deviceId
+        in: path
+        description: The Afero device ID.
+        schema:
+          type: string
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceAction'
+      responses:
+        '200':
+          description: The accepted action request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceActionResult'
+              example:
+                type: attribute_write
+                requestId: 14
+                timestampMs: 1449267297894
+                sender: ClientApi
+                source:
+                  type: user
+                  userId: 123acdfa-asd2-4b26-2cd2-68cfe2acdd8b8
+                  firstName: Mike
+                  lastName: Smith
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+  /v1/accounts/{accountId}/devices/{deviceId}/friendlyName:
+    put:
+      operationId: updateDeviceFriendlyName
+      tags:
+      - Devices
+      summary: Update the friendly name of a device
+      description: Changes the friendly name of the specified device. This name is visible in the Afero
+        Profile Editor.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-DeviceEndpoints/
+      parameters:
+      - name: accountId
+        in: path
+        description: The Afero account ID.
+        schema:
+          type: string
+        required: true
+      - name: deviceId
+        in: path
+        description: The Afero device ID.
+        schema:
+          type: string
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FriendlyName'
+      responses:
+        '200':
+          description: The updated friendly name.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendlyName'
+              example:
+                friendlyName: cool_new_name
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+  /v1/ota/partners/{partnerId}/types:
+    post:
+      operationId: createFirmwareType
+      tags:
+      - OTA
+      summary: Create a partner firmware type
+      description: Creates a new partner firmware type. Firmware types categorize firmware; platform firmware
+        types occupy 1-100 and MCU firmware types 101-200.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+      parameters:
+      - name: partnerId
+        in: path
+        description: The partner ID.
+        schema:
+          type: string
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FirmwareTypeCreate'
+      responses:
+        '201':
+          description: The created firmware type.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirmwareType'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+    get:
+      operationId: listFirmwareTypes
+      tags:
+      - OTA
+      summary: Retrieve partner firmware types
+      description: Retrieves the firmware types defined for the partner.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+      parameters:
+      - name: partnerId
+        in: path
+        description: The partner ID.
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: The partner's firmware types.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FirmwareType'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+  /v1/ota/partners/{partnerId}/types/{type}:
+    get:
+      operationId: getFirmwareType
+      tags:
+      - OTA
+      summary: Retrieve a firmware type by type
+      description: Retrieves the partner firmware type identified by the given type number.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+      parameters:
+      - name: partnerId
+        in: path
+        description: The partner ID.
+        schema:
+          type: string
+        required: true
+      - name: type
+        in: path
+        description: The firmware type. Platform firmware types are 1-100; MCU firmware types are 101-200.
+        schema:
+          type: integer
+        required: true
+      responses:
+        '200':
+          description: The firmware type.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FirmwareType'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+    put:
+      operationId: updateFirmwareType
+      tags:
+      - OTA
+      summary: Update a partner firmware type
+      description: Updates the name and description of a partner firmware type.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+      parameters:
+      - name: partnerId
+        in: path
+        description: The partner ID.
+        schema:
+          type: string
+        required: true
+      - name: type
+        in: path
+        description: The firmware type. Platform firmware types are 1-100; MCU firmware types are 101-200.
+        schema:
+          type: integer
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FirmwareTypeUpdate'
+      responses:
+        '204':
+          description: The firmware type was updated.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+  /v1/ota/partners/{partnerId}/pool:
+    post:
+      operationId: createPoolFirmwareImage
+      tags:
+      - OTA
+      summary: Create a firmware record in the firmware pool
+      description: Creates a new firmware record in the partner firmware image pool. The optional `associations`
+        map keys are partner IDs and its values are arrays of device type IDs; associations can be created
+        or deleted at any time after the pool image exists.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+      parameters:
+      - name: partnerId
+        in: path
+        description: The partner ID.
+        schema:
+          type: string
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PoolFirmwareImageCreate'
+      responses:
+        '201':
+          description: The created pool firmware record.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirmwareType'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+    get:
+      operationId: listPoolFirmwareImages
+      tags:
+      - OTA
+      summary: Retrieve firmware images from the pool
+      description: Retrieves a paged result set of firmware images in the partner firmware pool.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+      parameters:
+      - name: partnerId
+        in: path
+        description: The partner ID.
+        schema:
+          type: string
+        required: true
+      - name: tags
+        in: query
+        description: Comma-separated list of tags on which to filter.
+        schema:
+          type: string
+        required: false
+      - name: page
+        in: query
+        description: Zero-based index of the page to retrieve.
+        schema:
+          type: integer
+        required: false
+      - name: size
+        in: query
+        description: The number of elements per page. Default page size is 50.
+        schema:
+          type: integer
+        required: false
+      - name: sort
+        in: query
+        description: The field and sort direction; e.g. `updatedTimestamp`, `description`.
+        schema:
+          type: string
+        required: false
+      responses:
+        '200':
+          description: A page of pool firmware images.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolFirmwareImagePage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+  /v1/ota/partners/{partnerId}/binaries:
+    post:
+      operationId: uploadFirmwareBinary
+      tags:
+      - OTA
+      summary: Upload a firmware binary to a temporary location
+      description: Uploads a firmware file to a temporary location, either as a raw file stream (`application/octet-stream`)
+        or as a browser-style upload (`multipart/form-data`). The returned `value` is the file identifier
+        of the uploaded file — the SHA-256 hash of the file.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+      parameters:
+      - name: partnerId
+        in: path
+        description: The partner ID.
+        schema:
+          type: string
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: The temporary file identifier (SHA-256 of the file).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Value'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+  /v1/ota/partners/{partnerId}/binaries/moveToRepository:
+    post:
+      operationId: moveBinaryToRepository
+      tags:
+      - OTA
+      summary: Move a binary into the firmware repository
+      description: Moves an uploaded file from the temporary location into the permanent firmware image
+        repository. Send the response body of uploadFirmwareBinary as the payload. The response `value`
+        is the repository URL of the firmware binary, which must be used to update the firmware pool record
+        — otherwise the OTA service cannot send updates.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+      parameters:
+      - name: partnerId
+        in: path
+        description: The partner ID.
+        schema:
+          type: string
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Value'
+      responses:
+        '200':
+          description: The repository URL of the firmware binary.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Value'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+  /v1/ota/partners/{partnerId}/pool/types/{type}:
+    get:
+      operationId: listPoolFirmwareImagesByType
+      tags:
+      - OTA
+      summary: Retrieve pool firmware images of a type
+      description: Retrieves a paged result set of pool firmware images of a specific firmware type.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+      parameters:
+      - name: partnerId
+        in: path
+        description: The partner ID.
+        schema:
+          type: string
+        required: true
+      - name: type
+        in: path
+        description: The firmware type. Platform firmware types are 1-100; MCU firmware types are 101-200.
+        schema:
+          type: integer
+        required: true
+      - name: tags
+        in: query
+        description: Comma-separated list of tags on which to filter.
+        schema:
+          type: string
+        required: false
+      - name: page
+        in: query
+        description: Zero-based index of the page to retrieve.
+        schema:
+          type: integer
+        required: false
+      - name: size
+        in: query
+        description: The number of elements per page. Default page size is 50.
+        schema:
+          type: integer
+        required: false
+      - name: sort
+        in: query
+        description: The field and sort direction; e.g. `updatedTimestamp`, `description`.
+        schema:
+          type: string
+        required: false
+      responses:
+        '200':
+          description: A page of pool firmware images.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolFirmwareImagePage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+  /v1/ota/partners/{partnerId}/pool/types/{type}/names/{name}/versions/{version}/exists:
+    get:
+      operationId: poolFirmwareImageExists
+      tags:
+      - OTA
+      summary: Check whether a pool firmware image exists
+      description: Checks whether a firmware image with the given type, name and version string already
+        exists in the pool. `excludeFirmwareImageId` lets a client exclude the record it is about to update.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+      parameters:
+      - name: partnerId
+        in: path
+        description: The partner ID.
+        schema:
+          type: string
+        required: true
+      - name: type
+        in: path
+        description: The firmware type. Platform firmware types are 1-100; MCU firmware types are 101-200.
+        schema:
+          type: integer
+        required: true
+      - name: name
+        in: path
+        description: The name of the firmware image.
+        schema:
+          type: string
+        required: true
+      - name: version
+        in: path
+        description: The version string of the firmware image.
+        schema:
+          type: string
+        required: true
+      - name: excludeFirmwareImageId
+        in: query
+        description: The ID of a record to exclude from the check.
+        schema:
+          type: string
+        required: false
+      responses:
+        '200':
+          description: Whether a matching pool image exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BooleanValue'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+  /v1/ota/partners/{partnerId}/pool/types/{type}/versionNumbers/{versionNumber}/associations:
+    get:
+      operationId: listPoolFirmwareImageAssociations
+      tags:
+      - OTA
+      summary: Retrieve device type associations of a pool firmware image
+      description: Retrieves all device type associations of the given pool firmware image.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+      parameters:
+      - name: partnerId
+        in: path
+        description: The partner ID.
+        schema:
+          type: string
+        required: true
+      - name: type
+        in: path
+        description: The firmware type. Platform firmware types are 1-100; MCU firmware types are 101-200.
+        schema:
+          type: integer
+        required: true
+      - name: versionNumber
+        in: path
+        description: The globally unique, platform-generated version number of the firmware image.
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: The device type associations.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FirmwareAssociation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+  /v1/ota/partners/{partnerId}/pool/types/{type}/versionNumbers/{versionNumber}:
+    put:
+      operationId: updatePoolFirmwareImage
+      tags:
+      - OTA
+      summary: Update a firmware image in the pool
+      description: Updates the name, description, version string, binary URL and tags of a pool firmware
+        image.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+      parameters:
+      - name: partnerId
+        in: path
+        description: The partner ID.
+        schema:
+          type: string
+        required: true
+      - name: type
+        in: path
+        description: The firmware type. Platform firmware types are 1-100; MCU firmware types are 101-200.
+        schema:
+          type: integer
+        required: true
+      - name: versionNumber
+        in: path
+        description: The globally unique, platform-generated version number of the firmware image.
+        schema:
+          type: string
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PoolFirmwareImageUpdate'
+      responses:
+        '204':
+          description: The pool firmware image was updated.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+  /v1/ota/partners/{partnerId}/deviceTypes/{deviceTypeId}/firmwareImages:
+    post:
+      operationId: createDeviceTypeFirmwareImage
+      tags:
+      - OTA
+      summary: Associate a firmware image with a device type
+      description: Creates an association between a generic firmware image record in the firmware pool
+        and a specific device type, so the image becomes eligible for OTA. `versionNumber` is required.
+        Afero recommends sending the object returned by one of the firmware pool GET endpoints unmodified
+        — modifying it causes errors and prevents OTAs from succeeding.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+      parameters:
+      - name: partnerId
+        in: path
+        description: The partner ID.
+        schema:
+          type: string
+        required: true
+      - name: deviceTypeId
+        in: path
+        description: The device type ID.
+        schema:
+          type: string
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceTypeFirmwareImageCreate'
+      responses:
+        '201':
+          description: The created device type firmware image.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceTypeFirmwareImage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+    get:
+      operationId: listDeviceTypeFirmwareImages
+      tags:
+      - OTA
+      summary: Retrieve firmware images associated with a device type
+      description: Retrieves a paged result set of firmware image records associated with a device type.
+        Records of type 4 (DEVICE_DESCRIPTION) carry the two additional fields `deviceDescriptionId` and
+        `deviceProfileId`.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+      parameters:
+      - name: partnerId
+        in: path
+        description: The partner ID.
+        schema:
+          type: string
+        required: true
+      - name: deviceTypeId
+        in: path
+        description: The device type ID.
+        schema:
+          type: string
+        required: true
+      - name: tags
+        in: query
+        description: Comma-separated list of tags on which to filter.
+        schema:
+          type: string
+        required: false
+      - name: page
+        in: query
+        description: Zero-based index of the page to retrieve.
+        schema:
+          type: integer
+        required: false
+      - name: size
+        in: query
+        description: The number of elements per page. Default page size is 50.
+        schema:
+          type: integer
+        required: false
+      - name: sort
+        in: query
+        description: The field and sort direction; e.g. `updatedTimestamp`, `description`.
+        schema:
+          type: string
+        required: false
+      responses:
+        '200':
+          description: A page of device type firmware images.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceTypeFirmwareImagePage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+  /v1/ota/partners/{partnerId}/deviceTypes/{deviceTypeId}/firmwareImages/types/{type}:
+    get:
+      operationId: listDeviceTypeFirmwareImagesByType
+      tags:
+      - OTA
+      summary: Retrieve device type firmware images by firmware type
+      description: Retrieves a paged result set of firmware image records for a device type filtered to
+        one firmware type.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+      parameters:
+      - name: partnerId
+        in: path
+        description: The partner ID.
+        schema:
+          type: string
+        required: true
+      - name: deviceTypeId
+        in: path
+        description: The device type ID.
+        schema:
+          type: string
+        required: true
+      - name: type
+        in: path
+        description: The firmware type. Platform firmware types are 1-100; MCU firmware types are 101-200.
+        schema:
+          type: integer
+        required: true
+      - name: tags
+        in: query
+        description: Comma-separated list of tags on which to filter.
+        schema:
+          type: string
+        required: false
+      - name: page
+        in: query
+        description: Zero-based index of the page to retrieve.
+        schema:
+          type: integer
+        required: false
+      - name: size
+        in: query
+        description: The number of elements per page. Default page size is 50.
+        schema:
+          type: integer
+        required: false
+      - name: sort
+        in: query
+        description: The field and sort direction; e.g. `updatedTimestamp`, `description`.
+        schema:
+          type: string
+        required: false
+      responses:
+        '200':
+          description: A page of device type firmware images.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceTypeFirmwareImagePage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+  /v1/ota/partners/{partnerId}/deviceTypes/{deviceTypeId}/firmwareImages/types/{type}/versionNumbers/{versionNumber}:
+    get:
+      operationId: getDeviceTypeFirmwareImage
+      tags:
+      - OTA
+      summary: Retrieve a device type firmware image by type and version number
+      description: Retrieves the single firmware image record associated with a device type for the given
+        firmware type and version number.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+      parameters:
+      - name: partnerId
+        in: path
+        description: The partner ID.
+        schema:
+          type: string
+        required: true
+      - name: deviceTypeId
+        in: path
+        description: The device type ID.
+        schema:
+          type: string
+        required: true
+      - name: type
+        in: path
+        description: The firmware type. Platform firmware types are 1-100; MCU firmware types are 101-200.
+        schema:
+          type: integer
+        required: true
+      - name: versionNumber
+        in: path
+        description: The globally unique, platform-generated version number of the firmware image.
+        schema:
+          type: string
+        required: true
+      - name: page
+        in: query
+        description: Zero-based index of the page to retrieve.
+        schema:
+          type: integer
+        required: false
+      - name: size
+        in: query
+        description: The number of elements per page. Default page size is 50.
+        schema:
+          type: integer
+        required: false
+      - name: sort
+        in: query
+        description: The field and sort direction; e.g. `updatedTimestamp`, `description`.
+        schema:
+          type: string
+        required: false
+      responses:
+        '200':
+          description: The device type firmware image.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceTypeFirmwareImage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+    delete:
+      operationId: deleteDeviceTypeFirmwareImage
+      tags:
+      - OTA
+      summary: Dissociate a firmware image from a device type
+      description: 'Dissociates a firmware image from a device type. NOTE: the Afero docs page heading
+        names this operation DELETE while the HTTP METHOD line on the same section reads PUT — the heading
+        is used here and the discrepancy is recorded in the API Evangelist review.'
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+      parameters:
+      - name: partnerId
+        in: path
+        description: The partner ID.
+        schema:
+          type: string
+        required: true
+      - name: deviceTypeId
+        in: path
+        description: The device type ID.
+        schema:
+          type: string
+        required: true
+      - name: type
+        in: path
+        description: The firmware type. Platform firmware types are 1-100; MCU firmware types are 101-200.
+        schema:
+          type: integer
+        required: true
+      - name: versionNumber
+        in: path
+        description: The globally unique, platform-generated version number of the firmware image.
+        schema:
+          type: string
+        required: true
+      responses:
+        '204':
+          description: The firmware image was dissociated.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+  /v1/ota/partners/{partnerId}/deviceTypes/{deviceTypeId}/firmwareImages/{firmwareImageId}/push:
+    put:
+      operationId: pushFirmwareImageToDevice
+      tags:
+      - OTA
+      summary: Push a firmware image to a device
+      description: Pushes a firmware image to a target device. The payload `value` is the device ID of
+        the target device.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+      parameters:
+      - name: partnerId
+        in: path
+        description: The partner ID.
+        schema:
+          type: string
+        required: true
+      - name: deviceTypeId
+        in: path
+        description: The device type ID.
+        schema:
+          type: string
+        required: true
+      - name: firmwareImageId
+        in: path
+        description: The ID of the firmware image to push to a device.
+        schema:
+          type: string
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Value'
+      responses:
+        '202':
+          description: The firmware push was accepted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+  /v1/ota/partners/{partnerId}/tags:
+    get:
+      operationId: listFirmwareTags
+      tags:
+      - OTA
+      summary: Retrieve all firmware tags
+      description: Retrieves all firmware tags defined for the partner.
+      externalDocs:
+        url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+      parameters:
+      - name: partnerId
+        in: path
+        description: The partner ID.
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: The partner's firmware tags.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'The OAuth 2.0 access token returned by POST /oauth/token, sent as `Authorization:
+        Bearer <access_token>`. Tokens expire (approximately four hours per the Afero docs).'
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic with the partner OAuth Client ID as username and OAuth Client Secret as
+        password, used only on POST /oauth/token.
+  schemas:
+    TokenRequest:
+      type: object
+      required:
+      - username
+      - password
+      - grant_type
+      properties:
+        username:
+          type: string
+          description: The end-user's Afero username (email address).
+        password:
+          type: string
+          format: password
+          description: The end-user's Afero password.
+        grant_type:
+          type: string
+          enum:
+          - password
+          description: The OAuth 2.0 grant type.
+    AccessToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: The bearer access token.
+        token_type:
+          type: string
+          description: The token type; `bearer`.
+        expires_in:
+          type: integer
+          description: Seconds until the token expires.
+        scope:
+          type: string
+          description: Space-delimited granted scopes, e.g. `partner account`.
+    Error:
+      type: object
+      description: The Afero Cloud API error envelope, observed live on api.afero.io (2026-08-02).
+      properties:
+        timestamp:
+          type: integer
+          description: Epoch milliseconds the error was produced.
+        status:
+          type: integer
+          description: The HTTP status code.
+        error:
+          type: string
+          description: The short error code, e.g. `unauthorized`.
+        error_description:
+          type: string
+          description: Human readable description of the error.
+        service_name:
+          type: string
+          description: The Afero service that produced the error, e.g. `ClientApi`.
+        region:
+          type: string
+          description: The Afero cloud region, e.g. `us-west-2`.
+    User:
+      type: object
+      properties:
+        userId:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        credential:
+          $ref: '#/components/schemas/Credential'
+        accountAccess:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountAccess'
+        partnerAccess:
+          type: array
+          items:
+            $ref: '#/components/schemas/PartnerAccess'
+        tos:
+          type: array
+          items:
+            $ref: '#/components/schemas/TermsOfService'
+    Credential:
+      type: object
+      properties:
+        credentialId:
+          type: string
+          description: The sign-in credential, e.g. an email address.
+        failedAttempts:
+          type: integer
+        lastUsedTimestamp:
+          type: integer
+        type:
+          type: string
+          description: The credential type, e.g. `EMAIL`.
+        verified:
+          type: boolean
+    Account:
+      type: object
+      properties:
+        accountId:
+          type: string
+        createdTimestamp:
+          type: integer
+        description:
+          type: string
+        type:
+          type: string
+          description: The account type, e.g. `CUSTOMER`.
+    AccountAccess:
+      type: object
+      properties:
+        account:
+          $ref: '#/components/schemas/Account'
+        privileges:
+          type: object
+          properties:
+            canWrite:
+              type: boolean
+            owner:
+              type: boolean
+    Partner:
+      type: object
+      properties:
+        partnerId:
+          type: string
+        name:
+          type: string
+        clientId:
+          type: string
+          description: The partner OAuth Client ID.
+        clientSecret:
+          type: string
+          description: The partner OAuth Client Secret.
+        createdTimestamp:
+          type: integer
+    PartnerAccess:
+      type: object
+      properties:
+        partner:
+          $ref: '#/components/schemas/Partner'
+        privileges:
+          type: object
+          properties:
+            inviteUsers:
+              type: boolean
+            manageDeviceProfiles:
+              type: boolean
+            owner:
+              type: boolean
+            viewDeviceInfo:
+              type: boolean
+    TermsOfService:
+      type: object
+      properties:
+        tosType:
+          type: string
+          description: 'The terms type: `user`, `developer` or `general`.'
+        currentVersion:
+          type: integer
+        userVersion:
+          type: integer
+        needsAcceptance:
+          type: boolean
+        url:
+          type: string
+          format: uri
+    Device:
+      type: object
+      properties:
+        deviceId:
+          type: string
+        profileId:
+          type: string
+          description: The device Profile ID.
+        deviceTypeId:
+          type: string
+        partnerId:
+          type: string
+        friendlyName:
+          type: string
+        updating:
+          type: boolean
+        virtual:
+          type: boolean
+        developerDevice:
+          type: boolean
+        disconnectNotificationLevel:
+          type: string
+          description: e.g. `LOW`, `MEDIUM`.
+        createdTimestamp:
+          type: integer
+        deviceState:
+          $ref: '#/components/schemas/DeviceState'
+        deviceTags:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceTag'
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceAttribute'
+    DeviceState:
+      type: object
+      description: Returned when the `state` expansion is requested.
+      properties:
+        available:
+          type: boolean
+        visible:
+          type: boolean
+        dirty:
+          type: boolean
+        rebooted:
+          type: boolean
+        connectable:
+          type: boolean
+        connected:
+          type: boolean
+        linked:
+          type: boolean
+        rssi:
+          type: integer
+        updatedTimestamp:
+          type: integer
+        location:
+          $ref: '#/components/schemas/DeviceLocation'
+    DeviceLocation:
+      type: object
+      properties:
+        latitude:
+          type: string
+        longitude:
+          type: string
+        lastUpdatedTimestamp:
+          type: integer
+    DeviceTag:
+      type: object
+      description: Returned when the `tags` expansion is requested.
+      properties:
+        deviceTagId:
+          type: string
+        deviceTagType:
+          type: string
+          description: e.g. `SYSTEM`.
+        value:
+          type: string
+        localizationKey:
+          type: string
+    DeviceAttribute:
+      type: object
+      description: Returned when the `attributes` expansion is requested.
+      properties:
+        id:
+          type: integer
+          description: The device attribute ID.
+        data:
+          type: string
+          description: Hexadecimal encoded, little endian attribute value.
+        updatedTimestamp:
+          type: integer
+    DeviceAction:
+      type: object
+      required:
+      - type
+      - attrId
+      properties:
+        type:
+          type: string
+          enum:
+          - attribute_read
+          - attribute_write
+          description: The action to perform. The attribute must support the operation.
+        attrId:
+          type: integer
+          description: The device attribute ID to read or write.
+        data:
+          type: string
+          description: Hexadecimal encoded, little endian value to write.
+    DeviceActionResult:
+      type: object
+      properties:
+        type:
+          type: string
+        requestId:
+          type: integer
+        timestampMs:
+          type: integer
+        sender:
+          type: string
+          description: The Afero service that accepted the request, e.g. `ClientApi`.
+        source:
+          $ref: '#/components/schemas/ActionSource'
+    ActionSource:
+      type: object
+      properties:
+        type:
+          type: string
+          description: e.g. `user`.
+        userId:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+    FriendlyName:
+      type: object
+      required:
+      - friendlyName
+      properties:
+        friendlyName:
+          type: string
+    Value:
+      type: object
+      required:
+      - value
+      properties:
+        value:
+          type: string
+    BooleanValue:
+      type: object
+      properties:
+        value:
+          type: boolean
+    FirmwareTypeCreate:
+      type: object
+      required:
+      - name
+      - type
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: integer
+          description: Platform firmware types 1-100; MCU firmware types 101-200.
+    FirmwareTypeUpdate:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+    FirmwareType:
+      type: object
+      properties:
+        id:
+          type: string
+          description: An integer represented as a string; these values may exceed 53-bit precision.
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: integer
+        partnerId:
+          type: string
+        createdTimestamp:
+          type: integer
+        updatedTimestamp:
+          type: integer
+        versionAttributeId:
+          type: integer
+          description: The device attribute ID that reports this firmware type's version — the firmware
+            type plus 2000.
+    PoolFirmwareImageCreate:
+      type: object
+      required:
+      - name
+      - type
+      - version
+      - url
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: integer
+        version:
+          type: string
+          description: The user-friendly version string.
+        url:
+          type: string
+          description: The firmware repository URL of the binary.
+        tags:
+          type: array
+          items:
+            type: string
+        associations:
+          type: object
+          description: Map of partner ID to an array of device type IDs.
+          additionalProperties:
+            type: array
+            items:
+              type: string
+    PoolFirmwareImageUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        version:
+          type: string
+        url:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+    PoolFirmwareImage:
+      type: object
+      properties:
+        id:
+          type: string
+          description: An integer represented as a string; these values may exceed 53-bit precision.
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: integer
+        versionNumber:
+          type: string
+          description: An integer represented as a string; these values may exceed 53-bit precision.
+        version:
+          type: string
+        url:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        createdTimestamp:
+          type: integer
+        updatedTimestamp:
+          type: integer
+        partnerId:
+          type: string
+    DeviceTypeFirmwareImageCreate:
+      type: object
+      required:
+      - name
+      - type
+      - versionNumber
+      - version
+      - url
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: integer
+        versionNumber:
+          type: string
+        version:
+          type: string
+        url:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        associations:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+    DeviceTypeFirmwareImage:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: integer
+        versionNumber:
+          type: string
+          description: An integer represented as a string; these values may exceed 53-bit precision.
+        version:
+          type: string
+        url:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        createdTimestamp:
+          type: integer
+        updatedTimestamp:
+          type: integer
+        partnerId:
+          type: string
+        deviceTypeId:
+          type: string
+        deviceDescriptionId:
+          type: string
+          description: Present on firmware type 4 (DEVICE_DESCRIPTION) records.
+        deviceProfileId:
+          type: string
+          description: Present on firmware type 4 (DEVICE_DESCRIPTION) records.
+    FirmwareAssociation:
+      type: object
+      properties:
+        name:
+          type: string
+        partnerId:
+          type: string
+        email:
+          type: string
+        deviceTypeId:
+          type: string
+        deviceTypeName:
+          type: string
+        firmwareImageId:
+          type: string
+          description: An integer represented as a string; these values may exceed 53-bit precision.
+    Page:
+      type: object
+      description: The Afero paged result set envelope. Default page size is 50.
+      properties:
+        number:
+          type: integer
+          description: Zero-based index of this page.
+        size:
+          type: integer
+        totalPages:
+          type: integer
+        numberOfElements:
+          type: integer
+        totalElements:
+          type: integer
+        sort:
+          type: string
+    PoolFirmwareImagePage:
+      allOf:
+      - $ref: '#/components/schemas/Page'
+      - type: object
+        properties:
+          content:
+            type: array
+            items:
+              $ref: '#/components/schemas/PoolFirmwareImage'
+    DeviceTypeFirmwareImagePage:
+      allOf:
+      - $ref: '#/components/schemas/Page'
+      - type: object
+        properties:
+          content:
+            type: array
+            items:
+              $ref: '#/components/schemas/DeviceTypeFirmwareImage'
+  responses:
+    Unauthorized:
+      description: Full authentication is required to access this resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            timestamp: 1785679681261
+            status: 401
+            error: unauthorized
+            error_description: Full authentication is required to access this resource
+            service_name: ClientApi
+            region: us-west-2
+    Forbidden:
+      description: The authenticated principal does not hold the required account or partner privilege.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+security:
+- bearerAuth: []

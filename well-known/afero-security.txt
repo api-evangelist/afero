@@ -1,0 +1,45 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+# Canonical URI
+Canonical: https://www.afero.io/.well-known/security.txt
+
+# Our Preferred Languages
+Preferred-Languages: en
+
+# Afero PSIRT email address
+Contact: mailto:psirt@afero.io
+
+# Afero Non-Emergency Security Contact
+Contact: mailto:security@afero.io
+
+# Afero PSIRT OpenPGP key
+Encryption: https://keys.mailvelope.com/pks/lookup?op=get&search=psirt@afero.io
+
+# Afero Security OpenPGP key
+Encryption: https://keys.mailvelope.com/pks/lookup?op=get&search=security@afero.io
+
+# Afero's vulnerability disclosure policy
+Policy: https://afero.io/html/home/VDP.html
+
+# Expiration
+Expires: 2026-12-31T23:59:00.000Z
+
+# Our Security Policy
+Policy: https://www.afero.io/html/home/privacy.html#security
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE9iQh4uNTt9mIFvVHO9Q8nkXGIcEFAmf7TRUACgkQO9Q8nkXG
+IcGilg//aE6q1y7BfvodFhHiyVIeOXL1wDOK6XoBirWFz5W9lmM/e6hglRCAwDQq
+Ve+BOIGdf8lZ69PRMYntWTS/OxaanreJzEMTYz6qXy7Z7kOdZRvKxX3pIu0vSmng
+AMyNm0PRD2R6UcHEE2DopJdGnIn95nmmcUcg7VD2wHpGQ5T7WgIR/INvz1M6Kyj2
+n27wYUZsL7iknWIshcqCYJPvoKdlJ5pVl++e5uf+2AQs22eE9c1cSdyNrkEzZjLq
+DiQfQQQYgr4cCO6RAaLiQayeS0OSn0RNtAc5A7LKTOVznTeG9DIpj5TvJ1Y9Sht5
+/XWrkyEvH3G7krekedULw0Ncgx7gwp+iGaxEaz75mfIoNmJIgcBj467N11DaOv0c
+YOsOqO5UTl289Cleq8G3NA2C5nFSgBP6O0A89YoEGwFf0nhV87KpBik/vC8XDARa
+5jidRQu7uAMfdTutB1wBqvkbUGJnRBKZYNaotklGf+4+2JERqLylecGxc5Roq5uK
+FFC5EAEiWQAOaj6UNE/7uWkjQ3LXpK1l1ZR1cG5P5jye1M/wXs/OOHVSCdqUY1hs
+ILlRG3SrGztKQcjx2lNwRjl/IaY7zJF4AW2NWI7QIPTpNE6P+QZ1l3Ng4Hgbq9+K
+EJGhW4c7nJl1dqOzJpqckHxlfbad1D9Qt4l+PrH3wBrsO9wdW98=
+=inzo
+-----END PGP SIGNATURE-----

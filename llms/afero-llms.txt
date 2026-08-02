@@ -1,0 +1,100 @@
+# Afero
+
+> Afero, Inc. is a Los Altos, California IoT platform company founded in 2014. Afero ships an
+> end-to-end connected-product stack — ASR secure radio modules with a hardware root of trust and
+> an embedded Hardware Security Module, the afLib MCU libraries and a Secure Linux Device SDK, BLE
+> and Wi-Fi onboarding, the low-code Afero Profile Editor, Java (Android) and Swift (iOS) mobile
+> SDKs with a Softhub, and the Afero Cloud: a RESTful API at https://api.afero.io that lists
+> accounts and devices, reports real-time device state, executes attribute read/write actions on
+> connected devices, and drives the over-the-air firmware pipeline.
+
+Base URL: https://api.afero.io — TLS only, OAuth 2.0 bearer tokens, all resources under /v1/
+except the token endpoint at /oauth/token. Tokens expire in roughly four hours.
+
+Afero publishes NO machine-readable API description: https://api.afero.io/api-docs and
+https://api.afero.io/v1/openapi.json both return HTTP 401 (probed 2026-08-02). The OpenAPI
+documents linked below were DERIVED by API Evangelist from Afero's public developer documentation
+and are not provider-published.
+
+## APIs
+
+- [Afero Cloud API](https://afero-docs.readthedocs.io/en/latest/CloudAPIs/): The RESTful control
+  plane — devices, users, real-time state, attribute actions and OTA firmware management.
+- [Afero Cloud Authentication API](https://afero-docs.readthedocs.io/en/latest/API-OAuthEndpoints/):
+  OAuth 2.0 password grant at POST /oauth/token; HTTP Basic client authentication with the partner
+  OAuth Client ID and Client Secret from the Afero Profile Editor.
+- [Afero Cloud Users API](https://afero-docs.readthedocs.io/en/latest/API-UserEndpoints/):
+  GET /v1/users/me — account access, partner access and privileges, credential, terms of service.
+- [Afero Cloud Devices API](https://afero-docs.readthedocs.io/en/latest/API-DeviceEndpoints/):
+  list devices with state/tags/attributes expansions, execute attribute_read and attribute_write
+  actions, update a device friendly name.
+- [Afero Cloud OTA Firmware API](https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints/):
+  firmware types, the partner firmware pool, binary upload and repository move, device-type
+  associations, firmware tags, and firmware push.
+
+## Specs
+
+- [Afero Cloud API OpenAPI (derived)](openapi/_original/afero-cloud-api-openapi.yml): 20 paths,
+  25 operations, 33 schemas.
+- [Authentication API OpenAPI (derived)](openapi/afero-authentication-api-openapi.yml)
+- [Users API OpenAPI (derived)](openapi/afero-users-api-openapi.yml)
+- [Devices API OpenAPI (derived)](openapi/afero-devices-api-openapi.yml)
+- [OTA Firmware API OpenAPI (derived)](openapi/afero-ota-api-openapi.yml)
+
+## Docs
+
+- [Afero Developer Docs](https://afero-docs.readthedocs.io/en/latest/)
+- [Getting started tutorials](https://afero-docs.readthedocs.io/en/latest/Tutorials/)
+- [Afero IoT Platform overview](https://afero-docs.readthedocs.io/en/latest/SystemOverview/)
+- [Core development concepts](https://afero-docs.readthedocs.io/en/latest/CoreConcepts/)
+- [Profile Editor user guide](https://afero-docs.readthedocs.io/en/latest/Projects/)
+- [Console user guide](https://afero-docs.readthedocs.io/en/latest/Console/)
+- [OTA Manager user guide](https://afero-docs.readthedocs.io/en/latest/OTAMgr/)
+- [Mobile SDKs](https://afero-docs.readthedocs.io/en/latest/MobileSDK/)
+- [Secure Linux Device SDK](https://afero-docs.readthedocs.io/en/latest/LinuxSDK-Index/)
+- [afLib API reference](https://afero-docs.readthedocs.io/en/latest/API-afLib/)
+- [afLib result codes](https://afero-docs.readthedocs.io/en/latest/afLibErrors/)
+- [Device attribute registry](https://afero-docs.readthedocs.io/en/latest/AttrRegistry/)
+- [Release notes](https://afero-docs.readthedocs.io/en/latest/RelNotes/)
+- [Glossary](https://afero-docs.readthedocs.io/en/latest/Glossary/)
+
+## Artifacts
+
+- [Authentication profile](authentication/afero-authentication.yml)
+- [API conventions](conventions/afero-conventions.yml)
+- [Error catalog](errors/afero-problem-types.yml)
+- [Lifecycle and versioning](lifecycle/afero-lifecycle.yml)
+- [Changelog](changelog/afero-changelog.yml)
+- [Data model](data-model/afero-data-model.yml)
+- [Conformance](conformance/afero-conformance.yml)
+- [Packages and SDKs](packages/afero-packages.yml)
+- [Agentic access classification](agentic-access/afero-agentic-access.yml)
+- [Agent skills](skills/_index.yml)
+- [MCP candidate tool set](mcp/afero-mcp.yml)
+- [Well-known documents](well-known/afero-well-known.yml)
+- [Domain security probe](security/afero-domain-security.yml)
+- [Vulnerability disclosure](security/afero-vulnerability-disclosure.yml)
+
+## Company
+
+- [Afero](https://www.afero.io/)
+- [Afero Platform Console](https://console.afero.io/)
+- [Afero on GitHub](https://github.com/aferodeveloper)
+- [News](https://www.afero.io/html/home/news.html)
+- [White papers](https://www.afero.io/html/home/whitepapers.html)
+- [Vulnerability Disclosure Policy](https://afero.io/html/home/VDP.html)
+- [security.txt](https://www.afero.io/.well-known/security.txt)
+- [Developer terms of service](https://cdn.afero.io/tos/developer/v1/developer.html)
+- [Privacy policy](https://www.afero.io/html/home/privacy.html)
+- [Contact](https://www.afero.io/html/home/contact-afero.html)
+
+## Optional / not published by Afero
+
+- No hosted MCP server; no A2A agent card at /.well-known/agent-card.json or /.well-known/agent.json.
+- No webhooks, no AsyncAPI, no event or streaming surface.
+- No public status page (status.afero.io does not resolve), no SLA, no deprecation policy.
+- No documented rate limits and no idempotency key contract.
+- No published trust center or third-party certifications (SOC 2, ISO 27001, PCI DSS, HIPAA).
+- No public Postman collection or workspace.
+- SDKs are distributed from Afero's own GitHub and a private JFrog Artifactory / CocoaPods repo,
+  not from npm, PyPI or Maven Central.

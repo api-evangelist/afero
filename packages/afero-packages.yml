@@ -1,0 +1,103 @@
+generated: '2026-08-02'
+method: searched
+source: https://afero-docs.readthedocs.io/en/latest/MobileSDK/, https://github.com/aferodeveloper
+notes:
+- Afero distributes its client SDKs from its own GitHub organisation and a private JFrog Artifactory repository
+  rather than from the public language registries — none of the Afero SDKs are published to npm, PyPI,
+  Maven Central, NuGet, RubyGems, crates.io or pkg.go.dev (searched 2026-08-02).
+- The Swift SDK is consumed as a CocoaPod from Afero's own private podspec repo (git@github.com:aferodeveloper/Podspecs.git),
+  not from the CocoaPods trunk. Partners are given read-only GitHub access.
+- There is no first-party client library for the Afero Cloud REST API in any server-side language; the
+  Java and Swift SDKs are mobile client SDKs.
+packages:
+- language: java
+  registry: jfrog-artifactory
+  name: io.afero.sdk:afero-sdk-core
+  version: 1.5.3
+  url: https://github.com/aferodeveloper/AferoJavaSDK
+  repository: https://afero.jfrog.io/afero/afero-java-sdk
+  install: implementation 'io.afero.sdk:afero-sdk-core:1.5.3'
+  description: Base Afero Java SDK — interacting with the Afero Cloud and manipulating devices.
+  license: MIT & ARM Permissive Binary
+  official: true
+- language: java
+  registry: jfrog-artifactory
+  name: io.afero.sdk:afero-sdk-client-retrofit2
+  version: 1.5.3
+  url: https://github.com/aferodeveloper/AferoJavaSDK
+  repository: https://afero.jfrog.io/afero/afero-java-sdk
+  install: implementation 'io.afero.sdk:afero-sdk-client-retrofit2:1.5.3'
+  description: Optional AferoClient REST API implementation built on Retrofit2 and okhttp3.
+  official: true
+- language: java
+  registry: jfrog-artifactory
+  name: io.afero.sdk:afero-sdk-android
+  version: 1.5.3
+  url: https://github.com/aferodeveloper/AferoJavaSDK
+  install: implementation 'io.afero.sdk:afero-sdk-android:1.5.3'
+  description: Android platform module of the Afero Java SDK.
+  official: true
+- language: java
+  registry: jfrog-artifactory
+  name: io.afero.sdk:afero-sdk-softhub
+  version: 1.5.3
+  url: https://github.com/aferodeveloper/AferoJavaSDK
+  install: implementation 'io.afero.sdk:afero-sdk-softhub:1.5.3'
+  description: Afero Softhub support for Android (also requires io.afero.sdk:hubby).
+  official: true
+- language: swift
+  registry: cocoapods-private
+  name: AferoSwiftSDK
+  version: 1.6.0
+  url: https://github.com/aferodeveloper/AferoSwiftSDK
+  repository: git@github.com:aferodeveloper/Podspecs.git
+  install: pod 'AferoSwiftSDK/AFNetworking'
+  description: Afero Swift/iOS client SDK — accounts, sign-in, device listing and attribute interaction,
+    Softhub, Wi-Fi setup. Swift 5+, iOS 11.0+.
+  official: true
+- language: swift
+  registry: cocoapods-private
+  name: AferoSofthub
+  url: https://github.com/aferodeveloper/Podspecs
+  repository: git@github.com:aferodeveloper/Podspecs.git
+  description: Afero Softhub CocoaPod for iOS (AferoIOSSofthub).
+  official: true
+- language: swift
+  registry: cocoapods-private
+  name: AferoSwiftLogging
+  url: https://github.com/aferodeveloper/Podspecs
+  repository: git@github.com:aferodeveloper/Podspecs.git
+  description: Logging support pod used by the Afero Swift SDK.
+  official: true
+- language: c
+  registry: github
+  name: afLib3
+  url: https://github.com/aferodeveloper/afLib3
+  install: Install as an Arduino library from the GitHub release archive.
+  description: Afero MCU / Arduino library for the Afero Secure Radio on Afero development boards.
+  official: true
+- language: c
+  registry: github
+  name: afLib3-generic
+  url: https://github.com/aferodeveloper/afLib3-generic
+  description: Afero Linux / generic UNIX library for Afero development boards.
+  official: true
+- language: c
+  registry: github
+  name: afLib-linux
+  url: https://github.com/aferodeveloper/afLib-linux
+  description: Afero Secure Radio interface library for Linux and Linux-like OSes.
+  official: true
+- language: c
+  registry: github
+  name: afLib-ArduinoSTM32
+  url: https://github.com/aferodeveloper/afLib-ArduinoSTM32
+  description: Afero Secure Radio library for Arduino-compatible STM32 MCUs.
+  official: true
+- language: debian
+  registry: github
+  name: developerhub
+  url: https://github.com/aferodeveloper/developerhub
+  description: Debian/ARM packages providing barebones hub support for Afero BLE devices (Afero Developer
+    Hub).
+  official: true

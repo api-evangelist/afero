@@ -1,0 +1,57 @@
+generated: '2026-08-02'
+method: searched
+source: live probes of the Afero website, API and docs hosts
+hosts:
+- https://www.afero.io
+- https://api.afero.io
+- https://console.afero.io
+- https://cdn.afero.io
+- https://afero-docs.readthedocs.io
+documents:
+- host: https://www.afero.io
+  path: /.well-known/security.txt
+  status: 200
+  file: afero-security.txt
+  note: RFC 9116, PGP clear-signed, Expires 2026-12-31.
+- host: https://afero.io
+  path: /.well-known/security.txt
+  status: 200
+  note: Same document served on the apex host.
+- host: https://api.afero.io
+  path: /.well-known/security.txt
+  status: 404
+- host: https://api.afero.io
+  path: /.well-known/openid-configuration
+  status: 404
+- host: https://api.afero.io
+  path: /.well-known/oauth-authorization-server
+  status: 404
+- host: https://api.afero.io
+  path: /.well-known/api-catalog
+  status: 404
+- host: https://api.afero.io
+  path: /.well-known/ai-plugin.json
+  status: 404
+- host: https://api.afero.io
+  path: /.well-known/agent-card.json
+  status: 404
+- host: https://api.afero.io
+  path: /.well-known/agent.json
+  status: 404
+- host: https://www.afero.io
+  path: /.well-known/agent-card.json
+  status: 404
+- host: https://www.afero.io
+  path: /.well-known/agent.json
+  status: 404
+- host: https://console.afero.io
+  path: /.well-known/agent-card.json
+  status: 404
+- host: https://afero-docs.readthedocs.io
+  path: /llms.txt
+  status: 404
+notes:
+- Afero publishes an RFC 9116 security.txt on the marketing host only; the API host serves no /.well-known/
+  discovery surface.
+- No A2A agent card was found at either the canonical /.well-known/agent-card.json or the legacy /.well-known/agent.json
+  path on any Afero host.

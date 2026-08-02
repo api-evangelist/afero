@@ -1,0 +1,56 @@
+generated: '2026-08-02'
+method: derived
+source: openapi/_original/afero-cloud-api-openapi.yml, well-known/afero-security.txt, https://afero-docs.readthedocs.io/en/latest/CloudAPIs/
+standards:
+- id: oauth2
+  conforms: true
+  evidence: RFC 6749 resource owner password credentials grant at POST /oauth/token, client authenticated
+    with HTTP Basic; bearer access token with expires_in and scope. Afero cites RFC 6749 directly in the
+    OTA API prerequisites.
+- id: rfc6750-bearer-token
+  conforms: true
+  evidence: 'Authorization: Bearer <access_token> on every /v1/ operation.'
+- id: oidc
+  conforms: false
+  evidence: No /.well-known/openid-configuration (404 on api.afero.io); no id_token.
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: false
+  evidence: /.well-known/oauth-authorization-server returns 404 on api.afero.io.
+- id: rfc9116-security-txt
+  conforms: true
+  evidence: PGP clear-signed security.txt at https://www.afero.io/.well-known/security.txt with Contact,
+    Encryption, Policy, Preferred-Languages, Canonical and Expires fields.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: Errors use a proprietary JSON envelope (timestamp/status/error/error_description/service_name/region)
+    served as application/json.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: No deprecation policy or Sunset/Deprecation header documented.
+- id: openapi
+  conforms: false
+  evidence: Afero publishes no machine-readable API description. https://api.afero.io/api-docs and /v1/openapi.json
+    both return HTTP 401 (probed 2026-08-02). The OpenAPI in this repo is derived by API Evangelist from
+    the public docs.
+- id: asyncapi
+  conforms: false
+  evidence: No AsyncAPI document and no documented webhook or event-callback surface.
+- id: tls-1.2-plus
+  conforms: true
+  evidence: api.afero.io negotiates TLS 1.2 with HSTS max-age=31536000; www.afero.io negotiates TLS 1.3
+    (probed 2026-08-02, security/afero-domain-security.yml).
+- id: semver
+  conforms: true
+  evidence: Afero states it follows Semantic Versioning 2.0.0 for its software releases (https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints/).
+- id: bluetooth-low-energy
+  conforms: true
+  evidence: Afero Secure Radio modules (ASR-1, ASR-2, Modulo, Plumo) are BLE modules; the Afero Softhub
+    bridges BLE devices to the Afero Cloud.
+certifications_published: false
+certifications: []
+notes:
+- No trust centre and no named third-party certifications (SOC 2, ISO 27001, PCI DSS, HIPAA, FedRAMP)
+  are published on any Afero host as of 2026-08-02 — probed by 0-working/probe-security-programs.py (trust=none)
+  and by direct inspection of afero.io/html/home/. No Compliance pointer is emitted for this reason.
+- Afero does publish a dated Vulnerability Disclosure Policy (March 2024) and operates a PSIRT — captured
+  in security/afero-vulnerability-disclosure.yml.

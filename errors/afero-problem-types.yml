@@ -1,0 +1,73 @@
+generated: '2026-08-02'
+method: derived
+source: openapi/_original/afero-cloud-api-openapi.yml; live probe of https://api.afero.io
+format: afero-json
+rfc9457: false
+envelope:
+  media_type: application/json
+  fields:
+  - name: timestamp
+    type: integer
+    description: Epoch milliseconds the error was produced.
+  - name: status
+    type: integer
+    description: The HTTP status code, repeated in the body.
+  - name: error
+    type: string
+    description: Short machine-readable error code, e.g. unauthorized.
+  - name: error_description
+    type: string
+    description: Human readable description.
+  - name: service_name
+    type: string
+    description: The Afero service that produced the error, e.g. ClientApi.
+  - name: region
+    type: string
+    description: The Afero cloud region, e.g. us-west-2.
+  example:
+    timestamp: 1785679681261
+    status: 401
+    error: unauthorized
+    error_description: Full authentication is required to access this resource
+    service_name: ClientApi
+    region: us-west-2
+  evidence:
+    url: https://api.afero.io/v1/openapi.json
+    http_status: 401
+    fetched: '2026-08-02'
+problems:
+- status: 401
+  code: unauthorized
+  title: Full authentication is required to access this resource
+  cause: No Authorization header, an expired access token, or invalid Basic credentials on the token endpoint.
+    Afero access tokens expire in roughly four hours.
+  remediation: Re-run POST /oauth/token with the partner Client ID and Client Secret and retry with the
+    fresh bearer token.
+  observed: true
+  source_operation: openapi/_original/afero-cloud-api-openapi.yml#createAccessToken
+- status: 403
+  code: forbidden
+  title: Insufficient account or partner privilege
+  cause: The authenticated principal lacks the account privilege (canWrite/owner) or partner privilege
+    (viewDeviceInfo, manageDeviceProfiles, inviteUsers, owner) required by the operation; those privileges
+    are enumerated on GET /v1/users/me.
+  remediation: Check accountAccess[].privileges and partnerAccess[].privileges on /v1/users/me and request
+    the missing privilege from the partner owner.
+  observed: false
+  source_operation: openapi/_original/afero-cloud-api-openapi.yml#getCurrentUser
+- status: 404
+  code: not_found
+  title: Resource not found
+  cause: Unknown accountId, deviceId, partnerId, deviceTypeId, firmware type or versionNumber.
+  remediation: Resolve the identifier from the corresponding list operation before addressing the resource.
+  observed: true
+  note: 'Confirmed live: an unknown path on api.afero.io returns 404 while gated paths return 401, so
+    the API distinguishes the two.'
+domain_errors:
+  note: Afero publishes a separate result-code registry for the on-device afLib MCU library, which is
+    distinct from the Cloud API HTTP errors above.
+  docs: https://afero-docs.readthedocs.io/en/latest/afLibErrors/
+gaps:
+- Afero publishes no consolidated Cloud API error reference; the 4xx catalogue above is derived from the
+  documented auth model plus live probes of api.afero.io.
+- No application/problem+json (RFC 9457) support.

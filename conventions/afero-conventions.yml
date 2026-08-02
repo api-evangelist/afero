@@ -1,0 +1,113 @@
+generated: '2026-08-02'
+method: searched
+source: https://afero-docs.readthedocs.io/en/latest/CloudAPIs/, https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/,
+  https://afero-docs.readthedocs.io/en/latest/API-DeviceEndpoints/
+summary: Cross-cutting request/response semantics of the Afero Cloud API, captured from the Afero Developer
+  Docs and the derived OpenAPI.
+authentication:
+  style: oauth2-bearer
+  token_endpoint: https://api.afero.io/oauth/token
+  client_auth: HTTP Basic — Base64(OAuth Client ID:OAuth Client Secret)
+  grant_type: password
+  token_header: 'Authorization: Bearer <access_token>'
+  token_lifetime: Approximately four hours; the exact value is returned in expires_in (seconds).
+  docs: https://afero-docs.readthedocs.io/en/latest/API-OAuthEndpoints/
+  artifact: authentication/afero-authentication.yml
+idempotency:
+  supported: false
+  note: 'Afero documents no idempotency key header or parameter for the Cloud API. Device attribute writes
+    are asynchronous and are described as fire-and-forget: the call may return before the read/write takes
+    place, and if the device is offline the request may never complete. Retries are therefore at-least-once
+    with no server-side deduplication contract.'
+  evidence: https://afero-docs.readthedocs.io/en/latest/API-DeviceEndpoints/
+pagination:
+  style: page-number
+  applies_to: All OTA endpoints that return a list of objects.
+  request_params:
+  - name: page
+    in: query
+    description: Zero-based index of the page to retrieve.
+  - name: size
+    in: query
+    description: Number of elements per page. Default 50.
+  - name: sort
+    in: query
+    description: Field and sort direction, e.g. updatedTimestamp, description.
+  response_fields:
+  - number
+  - size
+  - totalPages
+  - numberOfElements
+  - totalElements
+  - content
+  - sort
+  default_page_size: 50
+  docs: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+filtering:
+  tags:
+    param: tags
+    in: query
+    description: Comma-separated list of firmware tags to filter an OTA list on.
+  expansions:
+    param: expansions
+    in: query
+    values:
+    - state
+    - tags
+    - attributes
+    description: Device list/read expansion selecting which additional device data is returned.
+    docs: https://afero-docs.readthedocs.io/en/latest/API-DeviceEndpoints/
+field_semantics:
+  large_integers_as_strings:
+    fields:
+    - id
+    - versionNumber
+    - firmwareImageId
+    note: Certain IDs and integer values are returned as strings because they may exceed the 53-bit precision
+      of a JavaScript number; convert with BigInteger (Java), the big-integer package or BigInt (JavaScript).
+      Annotated <integer_string> in the Afero model schemas.
+  timestamps:
+    format: epoch-milliseconds
+    fields:
+    - createdTimestamp
+    - updatedTimestamp
+    - lastUsedTimestamp
+    - timestampMs
+    - lastUpdatedTimestamp
+  attribute_data:
+    encoding: hexadecimal, little endian
+    note: Device attribute values are carried as hex strings on the data field of both reads and writes.
+  optional_fields: Optional fields may be omitted from request payloads and are omitted from response
+    bodies returned by the service.
+async_semantics:
+  device_actions: attribute_read and attribute_write are asynchronous; the HTTP call may return before
+    the device operation occurs. The response carries a requestId, timestampMs, sender and source rather
+    than the resulting attribute value.
+  ota_push: pushFirmwareImageToDevice returns 202 Accepted; delivery is performed by the Afero OTA service.
+versioning:
+  scheme: uri-path
+  current: v1
+  note: All resources except the OAuth token endpoint are under /v1/.
+error_envelope:
+  format: afero-json (not RFC 9457)
+  media_type: application/json
+  fields:
+  - timestamp
+  - status
+  - error
+  - error_description
+  - service_name
+  - region
+  observed: https://api.afero.io/v1/openapi.json returned this envelope with status 401 on 2026-08-02.
+  artifact: errors/afero-problem-types.yml
+rate_limiting:
+  documented: false
+  note: Afero publishes no rate-limit policy or rate-limit response headers for the Cloud API.
+request_tracing:
+  documented: false
+  note: No request-id request header is documented. Device action responses carry a service-assigned requestId.
+cross_links:
+  errors: errors/afero-problem-types.yml
+  lifecycle: lifecycle/afero-lifecycle.yml
+  authentication: authentication/afero-authentication.yml
+  data_model: data-model/afero-data-model.yml

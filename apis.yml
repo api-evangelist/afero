@@ -1,23 +1,230 @@
 aid: afero
 name: Afero
-description: 'Afero is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: 'Afero, Inc. is a Los Altos, California IoT platform company founded in 2014 by Joe Britt
+  and Shin Matsumura. Afero ships an end-to-end connected-product stack: ASR secure radio modules with
+  a hardware root of trust and an embedded Hardware Security Module, the afLib MCU libraries and Secure
+  Linux Device SDK for firmware, a Bluetooth Low Energy and Wi-Fi onboarding path, the Afero Profile
+  Editor low-code device-modeling tool, Java (Android) and Swift (iOS) mobile SDKs with a Softhub, and
+  the Afero Cloud — a RESTful API at api.afero.io that lists accounts and devices, reports real-time
+  device state, executes attribute read and write actions on connected devices, and drives the over-the-air
+  firmware pipeline. Afero has raised $73.2M from investors including Samsung Catalyst Fund and Crosspoint
+  Capital Partners and reports millions of deployed devices across 200+ product categories in consumer,
+  enterprise and industrial markets.'
+image: https://cdn.afero.io/social/afero_logo_114x114.png
 url: https://raw.githubusercontent.com/api-evangelist/afero/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-02'
 modified: '2026-08-02'
 tags:
 - Company
-apis: []
+- Internet of Things
+- IoT Platform
+- Connected Devices
+- Device Management
+- Firmware
+- Over-the-Air Updates
+- Bluetooth Low Energy
+- Embedded Security
+- Hardware
+apis:
+- aid: afero:cloud-api
+  name: Afero Cloud API
+  description: The Afero Cloud API is the RESTful control plane for the Afero IoT platform. It lists
+    the devices and users on an Afero account, reports real-time device state (connection, RSSI, location,
+    attribute values), executes attribute read and write actions against connected devices, and manages
+    the over-the-air firmware pipeline — firmware types, the partner firmware pool, binary upload, device-type
+    associations, firmware tags and firmware pushes. All calls are made over TLS to https://api.afero.io
+    and authenticated with an OAuth 2.0 bearer access token.
+  humanURL: https://afero-docs.readthedocs.io/en/latest/CloudAPIs/
+  baseURL: https://api.afero.io
+  tags:
+  - Devices
+  - Firmware
+  - Over-the-Air Updates
+  - Internet of Things
+  - OAuth
+  properties:
+  - type: OpenAPI
+    url: openapi/_original/afero-cloud-api-openapi.yml
+  - type: Documentation
+    url: https://afero-docs.readthedocs.io/en/latest/CloudAPIs/
+  - type: APIReference
+    url: https://afero-docs.readthedocs.io/en/latest/API-DeviceEndpoints/
+  - type: Authentication
+    url: https://afero-docs.readthedocs.io/en/latest/API-OAuthEndpoints/
+  - type: Overlay
+    url: overlays/afero-cloud-api-overlay.yaml
+  - type: AgenticAccess
+    url: agentic-access/afero-agentic-access.yml
+- aid: afero:authentication-api
+  name: Afero Cloud Authentication API
+  description: The OAuth 2.0 token endpoint for the Afero Cloud. A partner authenticates with HTTP Basic
+    using the OAuth Client ID and Client Secret issued in the Afero Profile Editor, posts the end-user
+    credentials with grant_type=password, and receives a bearer access token (scope "partner account")
+    that expires in approximately four hours and is sent on every subsequent Afero Cloud API request.
+  humanURL: https://afero-docs.readthedocs.io/en/latest/API-OAuthEndpoints/
+  baseURL: https://api.afero.io
+  tags:
+  - Authentication
+  - OAuth
+  - Security
+  properties:
+  - type: OpenAPI
+    url: openapi/afero-authentication-api-openapi.yml
+  - type: Documentation
+    url: https://afero-docs.readthedocs.io/en/latest/API-OAuthEndpoints/
+  - type: Overlay
+    url: overlays/afero-authentication-api-overlay.yaml
+- aid: afero:users-api
+  name: Afero Cloud Users API
+  description: 'The Afero Cloud Users API returns the profile of the authenticated end-user: the Afero
+    accounts the user can access and the privileges held on each, the sign-in credential and its verification
+    state, any partner accounts and partner privileges (invite users, manage device profiles, view device
+    info), and the user, developer and general terms-of-service versions accepted or awaiting acceptance.'
+  humanURL: https://afero-docs.readthedocs.io/en/latest/API-UserEndpoints/
+  baseURL: https://api.afero.io
+  tags:
+  - Users
+  - Accounts
+  - Identity
+  properties:
+  - type: OpenAPI
+    url: openapi/afero-users-api-openapi.yml
+  - type: Documentation
+    url: https://afero-docs.readthedocs.io/en/latest/API-UserEndpoints/
+  - type: Overlay
+    url: overlays/afero-users-api-overlay.yaml
+- aid: afero:devices-api
+  name: Afero Cloud Devices API
+  description: The Afero Cloud Devices API lists the devices linked to an Afero account and, via the
+    expansions query parameter, returns device state (available, visible, connected, connectable, linked,
+    RSSI, location), system and partner device tags, or the raw device attribute values. It also executes
+    asynchronous attribute_read and attribute_write actions against a device by attribute ID with hexadecimal
+    little-endian payloads, and updates a device friendly name.
+  humanURL: https://afero-docs.readthedocs.io/en/latest/API-DeviceEndpoints/
+  baseURL: https://api.afero.io
+  tags:
+  - Devices
+  - Device Management
+  - Internet of Things
+  - Telemetry
+  properties:
+  - type: OpenAPI
+    url: openapi/afero-devices-api-openapi.yml
+  - type: Documentation
+    url: https://afero-docs.readthedocs.io/en/latest/API-DeviceEndpoints/
+  - type: Overlay
+    url: overlays/afero-devices-api-overlay.yaml
+  - type: AgentSkill
+    url: skills/afero-read-device-state.md
+  - type: AgentSkill
+    url: skills/afero-control-a-device.md
+- aid: afero:ota-api
+  name: Afero Cloud OTA Firmware API
+  description: The Afero Over-the-Air (OTA) Update API lets a partner drive firmware releases from their
+    own CI/CD pipeline instead of the OTA Manager web application. It creates and updates partner firmware
+    types, creates firmware records in the partner firmware pool, uploads firmware binaries to a temporary
+    location and moves them into the permanent repository, checks whether a name and version already
+    exists, associates pool images with device types to make them OTA-eligible, lists and filters firmware
+    images with tag filtering and paging, pushes an image to a specific device, dissociates an image
+    from a device type, and lists firmware tags.
+  humanURL: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints/
+  baseURL: https://api.afero.io
+  tags:
+  - Firmware
+  - Over-the-Air Updates
+  - Device Management
+  - Deployment
+  properties:
+  - type: OpenAPI
+    url: openapi/afero-ota-api-openapi.yml
+  - type: Documentation
+    url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints/
+  - type: APIReference
+    url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
+  - type: Overlay
+    url: overlays/afero-ota-api-overlay.yaml
+  - type: AgentSkill
+    url: skills/afero-publish-firmware-ota.md
+  - type: AgentSkill
+    url: skills/afero-audit-firmware-fleet.md
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgenticAccess
+  url: agentic-access/afero-agentic-access.yml
+- type: VulnerabilityDisclosure
+  url: security/afero-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/afero-domain-security.yml
+- type: Authentication
+  url: authentication/afero-authentication.yml
 - type: Website
-  url: https://forgeglobal.com/afero_stock/
+  url: https://www.afero.io/
+- type: DeveloperPortal
+  url: https://afero-docs.readthedocs.io/en/latest/
+- type: Documentation
+  url: https://afero-docs.readthedocs.io/en/latest/
+- type: APIReference
+  url: https://afero-docs.readthedocs.io/en/latest/CloudAPIs/
+- type: GettingStarted
+  url: https://afero-docs.readthedocs.io/en/latest/Tutorials/
+- type: Console
+  url: https://console.afero.io/
+- type: Login
+  url: https://console.afero.io/
+- type: Support
+  url: https://www.afero.io/html/home/contact-afero.html
+- type: GitHubOrganization
+  url: https://github.com/aferodeveloper
+- type: Blog
+  url: https://www.afero.io/html/home/news.html
+- type: WhitePapers
+  url: https://www.afero.io/html/home/whitepapers.html
+- type: TermsOfService
+  url: https://cdn.afero.io/tos/developer/v1/developer.html
+- type: PrivacyPolicy
+  url: https://www.afero.io/html/home/privacy.html
+- type: LinkedIn
+  url: https://www.linkedin.com/company/afero
+- type: Packages
+  url: packages/afero-packages.yml
+- type: SDKs
+  url: packages/afero-packages.yml
+- type: WellKnown
+  url: well-known/afero-well-known.yml
+- type: SecurityTxt
+  url: well-known/afero-security.txt
+- type: LLMsTxt
+  url: llms/afero-llms.txt
+- type: Conventions
+  url: conventions/afero-conventions.yml
+- type: ErrorCatalog
+  url: errors/afero-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/afero-lifecycle.yml
+- type: ChangeLog
+  url: changelog/afero-changelog.yml
+- type: Conformance
+  url: conformance/afero-conformance.yml
+- type: DataModel
+  url: data-model/afero-data-model.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Security
+  url: https://afero.io/html/home/VDP.html
+- type: ReleaseNotes
+  url: https://afero-docs.readthedocs.io/en/latest/RelNotes/
+- type: Overlay
+  url: overlays/afero-cloud-api-overlay.yaml
+x-forge-listing: https://forgeglobal.com/afero_stock/
+x-enrichment:
+  date: '2026-08-02'
+  status: enriched
+  artifacts_added: 30
+  pass: local-v1

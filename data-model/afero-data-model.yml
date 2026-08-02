@@ -1,0 +1,187 @@
+generated: '2026-08-02'
+method: derived
+source: openapi/_original/afero-cloud-api-openapi.yml
+summary: Entity graph of the Afero Cloud API derived from the schema $ref links and the id-reference fields
+  in the derived OpenAPI.
+entities:
+- name: User
+  id_field: userId
+  schema: User
+  description: An Afero end-user identity. Root of the /v1/users/me response.
+- name: Credential
+  id_field: credentialId
+  schema: Credential
+  description: The sign-in credential of a user (typically EMAIL) and its verified state.
+- name: Account
+  id_field: accountId
+  schema: Account
+  description: An Afero account (type CUSTOMER) that owns devices. Path parameter on every device operation.
+- name: Partner
+  id_field: partnerId
+  schema: Partner
+  description: The Afero partner (ecosystem owner) that holds the OAuth client credentials, device types
+    and firmware. Path parameter on every OTA operation.
+- name: Device
+  id_field: deviceId
+  schema: Device
+  description: A physical or virtual Afero device linked to an account.
+- name: DeviceState
+  schema: DeviceState
+  description: Connection, visibility, RSSI and location snapshot for a device; returned under the state
+    expansion.
+- name: DeviceTag
+  id_field: deviceTagId
+  schema: DeviceTag
+  description: A SYSTEM or partner tag on a device; returned under the tags expansion.
+- name: DeviceAttribute
+  id_field: id
+  schema: DeviceAttribute
+  description: A numbered attribute on a device carrying a hex little-endian value. The unit of both telemetry
+    and control.
+- name: DeviceType
+  id_field: deviceTypeId
+  description: The model of device, defined in the Profile Editor. Not returned as a standalone resource
+    by the public API, but referenced by devices and firmware images.
+- name: DeviceProfile
+  id_field: profileId
+  description: The published device Profile describing a device type's attributes, mobile UI and rules.
+- name: FirmwareType
+  id_field: type
+  schema: FirmwareType
+  description: A partner firmware category (platform 1-100, MCU 101-200) with a versionAttributeId of
+    type + 2000.
+- name: PoolFirmwareImage
+  id_field: versionNumber
+  schema: PoolFirmwareImage
+  description: A hardware-specific firmware record in the partner firmware pool, not yet bound to a device
+    type.
+- name: DeviceTypeFirmwareImage
+  id_field: id
+  schema: DeviceTypeFirmwareImage
+  description: A pool image associated with a device type, making it OTA-eligible.
+- name: FirmwareAssociation
+  schema: FirmwareAssociation
+  description: The join record between a pool firmware image and a device type.
+- name: FirmwareTag
+  description: A free-text tag on firmware images, used to filter pool and device-type firmware listings.
+- name: TermsOfService
+  schema: TermsOfService
+  description: A user/developer/general terms version and whether the user has accepted it.
+relationships:
+- from: User
+  to: Account
+  type: has_many
+  via: accountAccess[].account
+  note: With privileges canWrite and owner.
+- from: User
+  to: Partner
+  type: has_many
+  via: partnerAccess[].partner
+  note: With privileges inviteUsers, manageDeviceProfiles, owner, viewDeviceInfo.
+- from: User
+  to: Credential
+  type: has_one
+  via: credential
+- from: User
+  to: TermsOfService
+  type: has_many
+  via: tos
+- from: Account
+  to: Device
+  type: has_many
+  via: accountId (path)
+- from: Device
+  to: DeviceState
+  type: has_one
+  via: deviceState
+- from: Device
+  to: DeviceTag
+  type: has_many
+  via: deviceTags
+- from: Device
+  to: DeviceAttribute
+  type: has_many
+  via: attributes
+- from: Device
+  to: DeviceType
+  type: belongs_to
+  via: deviceTypeId
+- from: Device
+  to: DeviceProfile
+  type: belongs_to
+  via: profileId
+- from: Device
+  to: Partner
+  type: belongs_to
+  via: partnerId
+- from: DeviceState
+  to: DeviceLocation
+  type: has_one
+  via: location
+- from: Partner
+  to: FirmwareType
+  type: has_many
+  via: partnerId (path)
+- from: Partner
+  to: PoolFirmwareImage
+  type: has_many
+  via: partnerId (path)
+- from: Partner
+  to: FirmwareTag
+  type: has_many
+  via: partnerId (path)
+- from: PoolFirmwareImage
+  to: FirmwareType
+  type: belongs_to
+  via: type
+- from: PoolFirmwareImage
+  to: FirmwareAssociation
+  type: has_many
+  via: type + versionNumber
+- from: FirmwareAssociation
+  to: DeviceType
+  type: belongs_to
+  via: deviceTypeId
+- from: DeviceTypeFirmwareImage
+  to: DeviceType
+  type: belongs_to
+  via: deviceTypeId
+- from: DeviceTypeFirmwareImage
+  to: PoolFirmwareImage
+  type: belongs_to
+  via: versionNumber
+- from: DeviceTypeFirmwareImage
+  to: DeviceProfile
+  type: belongs_to
+  via: deviceProfileId
+  note: Only on firmware type 4 (DEVICE_DESCRIPTION) records.
+- from: DeviceAction
+  to: DeviceAttribute
+  type: belongs_to
+  via: attrId
+id_conventions:
+- pattern: UUID v4
+  applies_to:
+  - userId
+  - accountId
+  - deviceId
+  - profileId
+  - deviceTypeId
+  - partnerId
+  - deviceTagId
+- pattern: integer-as-string
+  applies_to:
+  - id (firmware)
+  - versionNumber
+  - firmwareImageId
+  note: May exceed 53-bit precision — parse as BigInteger/BigInt.
+- pattern: opaque device id
+  applies_to:
+  - deviceId
+  note: Some deviceIds are 16-character hex strings rather than UUIDs (e.g. 01234462d72ca571 in the Afero
+    docs example).
+- pattern: attribute id
+  applies_to:
+  - DeviceAttribute.id
+  note: Small integers. 1024+ are device attributes; 2001-2004 and 2101+ report firmware versions (firmware
+    type + 2000).

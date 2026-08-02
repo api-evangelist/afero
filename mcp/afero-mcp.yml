@@ -1,0 +1,60 @@
+generated: '2026-08-02'
+method: derived
+status: candidate
+source: openapi/_original/afero-cloud-api-openapi.yml
+note: Afero publishes NO hosted or remote MCP server (searched the Afero docs, the aferodeveloper GitHub
+  organisation, npm @modelcontextprotocol and the public MCP registries on 2026-08-02). The tool set
+  below is a CANDIDATE derived from the operations of the derived Afero Cloud OpenAPI — it is a design
+  proposal, not an Afero product.
+server:
+  name: afero
+  transport: http
+  url: null
+authentication:
+  type: oauth2-password-grant
+  note: An MCP server would need to broker the Afero /oauth/token password grant and refresh the ~4h
+    bearer token; Afero has no client-credentials or authorization-code flow.
+tools:
+- name: get_current_user
+  description: Get the authenticated Afero user, their account access and partner privileges.
+  source_operation: openapi/afero-users-api-openapi.yml#getCurrentUser
+  action_class: read
+- name: list_devices
+  description: List the devices on an Afero account, optionally expanded with state, tags or attributes.
+  source_operation: openapi/afero-devices-api-openapi.yml#listDevices
+  action_class: read
+- name: get_device
+  description: Get a single Afero device and its state.
+  source_operation: openapi/afero-devices-api-openapi.yml#getDevice
+  action_class: read
+- name: execute_device_action
+  description: Read or write a device attribute on a connected Afero device.
+  source_operation: openapi/afero-devices-api-openapi.yml#executeDeviceAction
+  action_class: acting
+  consequence: physical
+  note: Writes actuate real hardware — should require human confirmation.
+- name: rename_device
+  description: Update the friendly name of an Afero device.
+  source_operation: openapi/afero-devices-api-openapi.yml#updateDeviceFriendlyName
+  action_class: acting
+- name: list_firmware_types
+  description: List a partner's OTA firmware types.
+  source_operation: openapi/afero-ota-api-openapi.yml#listFirmwareTypes
+  action_class: read
+- name: list_pool_firmware_images
+  description: List firmware images in the partner firmware pool, filtered by tag.
+  source_operation: openapi/afero-ota-api-openapi.yml#listPoolFirmwareImages
+  action_class: read
+- name: list_device_type_firmware_images
+  description: List firmware images associated with a device type.
+  source_operation: openapi/afero-ota-api-openapi.yml#listDeviceTypeFirmwareImages
+  action_class: read
+- name: push_firmware_image
+  description: Push a firmware image to a specific device.
+  source_operation: openapi/afero-ota-api-openapi.yml#pushFirmwareImageToDevice
+  action_class: acting
+  consequence: safety-critical
+  note: Flashes firmware onto deployed hardware — must be human-in-the-loop.
+apis_yml_pointer: 'none — no `type: MCPServer` pointer is wired in apis.yml on purpose. Afero publishes
+  no MCP server, and the mcp_server_present / mcp_server scoring checks must not be credited for a candidate
+  design proposal.'

@@ -1,0 +1,33 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Afero Cloud Authentication API
+  version: 1.0.0
+extends: openapi/afero-authentication-api-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: Afero
+    x-apievangelist-slug: afero
+    x-apievangelist-source-docs: https://afero-docs.readthedocs.io/en/latest/CloudAPIs/
+    x-apievangelist-spec-origin: derived-from-documentation
+    x-apievangelist-provider-openapi: none-published
+    x-apievangelist-artifacts:
+      authentication: authentication/afero-authentication.yml
+      conventions: conventions/afero-conventions.yml
+      errors: errors/afero-problem-types.yml
+      lifecycle: lifecycle/afero-lifecycle.yml
+      data-model: data-model/afero-data-model.yml
+      conformance: conformance/afero-conformance.yml
+      packages: packages/afero-packages.yml
+      skills: skills/_index.yml
+- target: $.info
+  update:
+    x-apievangelist-review:
+      no_machine_readable_contract: https://api.afero.io/api-docs and https://api.afero.io/v1/openapi.json
+        both return HTTP 401 (probed 2026-08-02).
+      no_rate_limit_policy: true
+      no_idempotency_contract: true
+      no_status_page: true
+      no_deprecation_policy: true
+      no_event_surface: No webhooks and no AsyncAPI.
+      release_notes_stale_since: '2020-01-28'
