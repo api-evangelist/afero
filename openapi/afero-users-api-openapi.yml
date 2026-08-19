@@ -1,19 +1,8 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Afero Cloud Users API
   version: v1
-  description: 'The Afero Cloud API is the RESTful control plane for the Afero IoT platform: it lists
-    the devices and users on an Afero account, reports real-time device state, executes attribute read/write
-    actions against connected devices, and manages the over-the-air (OTA) firmware pipeline — firmware
-    types, firmware pool images, binary upload, device-type associations, firmware tags, and firmware
-    pushes. All requests are made over TLS to https://api.afero.io and are authenticated with an OAuth
-    2.0 bearer access token obtained from the /oauth/token endpoint using the partner OAuth Client ID
-    and Client Secret issued in the Afero Profile Editor. This OpenAPI was DERIVED by API Evangelist from
-    Afero''s public developer documentation (resource URLs, HTTP methods, request headers, request payload
-    model schemas, response model schemas and examples transcribed verbatim from the docs); it is NOT
-    a provider-published specification. Afero publishes no machine-readable spec: https://api.afero.io/api-docs
-    and https://api.afero.io/v1/openapi.json both answer HTTP 401 (authenticated access required), probed
-    2026-08-02.'
+  description: 'The Afero Cloud API is the RESTful control plane for the Afero IoT platform: it lists the devices and users on an Afero account, reports real-time device state, executes attribute read/write actions against connected devices, and manages the over-the-air (OTA) firmware pipeline — firmware types, firmware pool images, binary upload, device-type associations, firmware tags, and firmware pushes. All requests are made over TLS to https://api.afero.io and are authenticated with an OAuth 2.0 bearer access token obtained from the /oauth/token endpoint using the partner OAuth Client ID and Client Secret issued in the Afero Profile Editor. This OpenAPI was DERIVED by API Evangelist from Afero''s public developer documentation (resource URLs, HTTP methods, request headers, request payload model schemas, response model schemas and examples transcribed verbatim from the docs); it is NOT a provider-published specification. Afero publishes no machine-readable spec: https://api.afero.io/api-docs and https://api.afero.io/v1/openapi.json both answer HTTP 401 (authenticated access required), probed 2026-08-02.'
   contact:
     name: Afero Developer Documentation
     url: https://afero-docs.readthedocs.io/en/latest/CloudAPIs/
@@ -25,12 +14,11 @@ info:
   x-apievangelist-derived-on: '2026-08-02'
   x-apievangelist-provider-published: false
   x-apievangelist-split-from: openapi/_original/afero-cloud-api-openapi.yml
-externalDocs:
-  description: Afero Developer Docs
-  url: https://afero-docs.readthedocs.io/en/latest/
 servers:
 - url: https://api.afero.io
   description: Afero Cloud API production base URL
+security:
+- bearerAuth: []
 tags:
 - name: Users
   description: The authenticated end-user, their account and partner access, and terms of service.
@@ -43,9 +31,7 @@ paths:
       tags:
       - Users
       summary: Get information about a user
-      description: 'Returns user-specific information for the authenticated end-user: the accounts the
-        user can access and the privileges held on each, the sign-in credential, the partner accounts
-        and partner privileges held, and the terms-of-service versions accepted or awaiting acceptance.'
+      description: 'Returns user-specific information for the authenticated end-user: the accounts the user can access and the privileges held on each, the sign-in credential, the partner accounts and partner privileges held, and the terms-of-service versions accepted or awaiting acceptance.'
       externalDocs:
         url: https://afero-docs.readthedocs.io/en/latest/API-UserEndpoints/
       responses:
@@ -60,105 +46,7 @@ paths:
       security:
       - bearerAuth: []
 components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      description: 'The OAuth 2.0 access token returned by POST /oauth/token, sent as `Authorization:
-        Bearer <access_token>`. Tokens expire (approximately four hours per the Afero docs).'
   schemas:
-    AccountAccess:
-      type: object
-      properties:
-        account:
-          $ref: '#/components/schemas/Account'
-        privileges:
-          type: object
-          properties:
-            canWrite:
-              type: boolean
-            owner:
-              type: boolean
-    Account:
-      type: object
-      properties:
-        accountId:
-          type: string
-        createdTimestamp:
-          type: integer
-        description:
-          type: string
-        type:
-          type: string
-          description: The account type, e.g. `CUSTOMER`.
-    Error:
-      type: object
-      description: The Afero Cloud API error envelope, observed live on api.afero.io (2026-08-02).
-      properties:
-        timestamp:
-          type: integer
-          description: Epoch milliseconds the error was produced.
-        status:
-          type: integer
-          description: The HTTP status code.
-        error:
-          type: string
-          description: The short error code, e.g. `unauthorized`.
-        error_description:
-          type: string
-          description: Human readable description of the error.
-        service_name:
-          type: string
-          description: The Afero service that produced the error, e.g. `ClientApi`.
-        region:
-          type: string
-          description: The Afero cloud region, e.g. `us-west-2`.
-    TermsOfService:
-      type: object
-      properties:
-        tosType:
-          type: string
-          description: 'The terms type: `user`, `developer` or `general`.'
-        currentVersion:
-          type: integer
-        userVersion:
-          type: integer
-        needsAcceptance:
-          type: boolean
-        url:
-          type: string
-          format: uri
-    PartnerAccess:
-      type: object
-      properties:
-        partner:
-          $ref: '#/components/schemas/Partner'
-        privileges:
-          type: object
-          properties:
-            inviteUsers:
-              type: boolean
-            manageDeviceProfiles:
-              type: boolean
-            owner:
-              type: boolean
-            viewDeviceInfo:
-              type: boolean
-    Credential:
-      type: object
-      properties:
-        credentialId:
-          type: string
-          description: The sign-in credential, e.g. an email address.
-        failedAttempts:
-          type: integer
-        lastUsedTimestamp:
-          type: integer
-        type:
-          type: string
-          description: The credential type, e.g. `EMAIL`.
-        verified:
-          type: boolean
     User:
       type: object
       properties:
@@ -182,6 +70,60 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TermsOfService'
+    AccountAccess:
+      type: object
+      properties:
+        account:
+          $ref: '#/components/schemas/Account'
+        privileges:
+          type: object
+          properties:
+            canWrite:
+              type: boolean
+            owner:
+              type: boolean
+    Credential:
+      type: object
+      properties:
+        credentialId:
+          type: string
+          description: The sign-in credential, e.g. an email address.
+        failedAttempts:
+          type: integer
+        lastUsedTimestamp:
+          type: integer
+        type:
+          type: string
+          description: The credential type, e.g. `EMAIL`.
+        verified:
+          type: boolean
+    TermsOfService:
+      type: object
+      properties:
+        tosType:
+          type: string
+          description: 'The terms type: `user`, `developer` or `general`.'
+        currentVersion:
+          type: integer
+        userVersion:
+          type: integer
+        needsAcceptance:
+          type: boolean
+        url:
+          type: string
+          format: uri
+    Account:
+      type: object
+      properties:
+        accountId:
+          type: string
+        createdTimestamp:
+          type: integer
+        description:
+          type: string
+        type:
+          type: string
+          description: The account type, e.g. `CUSTOMER`.
     Partner:
       type: object
       properties:
@@ -197,6 +139,44 @@ components:
           description: The partner OAuth Client Secret.
         createdTimestamp:
           type: integer
+    Error:
+      type: object
+      description: The Afero Cloud API error envelope, observed live on api.afero.io (2026-08-02).
+      properties:
+        timestamp:
+          type: integer
+          description: Epoch milliseconds the error was produced.
+        status:
+          type: integer
+          description: The HTTP status code.
+        error:
+          type: string
+          description: The short error code, e.g. `unauthorized`.
+        error_description:
+          type: string
+          description: Human readable description of the error.
+        service_name:
+          type: string
+          description: The Afero service that produced the error, e.g. `ClientApi`.
+        region:
+          type: string
+          description: The Afero cloud region, e.g. `us-west-2`.
+    PartnerAccess:
+      type: object
+      properties:
+        partner:
+          $ref: '#/components/schemas/Partner'
+        privileges:
+          type: object
+          properties:
+            inviteUsers:
+              type: boolean
+            manageDeviceProfiles:
+              type: boolean
+            owner:
+              type: boolean
+            viewDeviceInfo:
+              type: boolean
   responses:
     Unauthorized:
       description: Full authentication is required to access this resource.
@@ -211,5 +191,11 @@ components:
             error_description: Full authentication is required to access this resource
             service_name: ClientApi
             region: us-west-2
-security:
-- bearerAuth: []
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'The OAuth 2.0 access token returned by POST /oauth/token, sent as `Authorization: Bearer <access_token>`. Tokens expire (approximately four hours per the Afero docs).'
+externalDocs:
+  description: Afero Developer Docs
+  url: https://afero-docs.readthedocs.io/en/latest/

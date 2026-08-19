@@ -1,19 +1,8 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Afero Cloud Devices API
   version: v1
-  description: 'The Afero Cloud API is the RESTful control plane for the Afero IoT platform: it lists
-    the devices and users on an Afero account, reports real-time device state, executes attribute read/write
-    actions against connected devices, and manages the over-the-air (OTA) firmware pipeline — firmware
-    types, firmware pool images, binary upload, device-type associations, firmware tags, and firmware
-    pushes. All requests are made over TLS to https://api.afero.io and are authenticated with an OAuth
-    2.0 bearer access token obtained from the /oauth/token endpoint using the partner OAuth Client ID
-    and Client Secret issued in the Afero Profile Editor. This OpenAPI was DERIVED by API Evangelist from
-    Afero''s public developer documentation (resource URLs, HTTP methods, request headers, request payload
-    model schemas, response model schemas and examples transcribed verbatim from the docs); it is NOT
-    a provider-published specification. Afero publishes no machine-readable spec: https://api.afero.io/api-docs
-    and https://api.afero.io/v1/openapi.json both answer HTTP 401 (authenticated access required), probed
-    2026-08-02.'
+  description: 'The Afero Cloud API is the RESTful control plane for the Afero IoT platform: it lists the devices and users on an Afero account, reports real-time device state, executes attribute read/write actions against connected devices, and manages the over-the-air (OTA) firmware pipeline — firmware types, firmware pool images, binary upload, device-type associations, firmware tags, and firmware pushes. All requests are made over TLS to https://api.afero.io and are authenticated with an OAuth 2.0 bearer access token obtained from the /oauth/token endpoint using the partner OAuth Client ID and Client Secret issued in the Afero Profile Editor. This OpenAPI was DERIVED by API Evangelist from Afero''s public developer documentation (resource URLs, HTTP methods, request headers, request payload model schemas, response model schemas and examples transcribed verbatim from the docs); it is NOT a provider-published specification. Afero publishes no machine-readable spec: https://api.afero.io/api-docs and https://api.afero.io/v1/openapi.json both answer HTTP 401 (authenticated access required), probed 2026-08-02.'
   contact:
     name: Afero Developer Documentation
     url: https://afero-docs.readthedocs.io/en/latest/CloudAPIs/
@@ -25,12 +14,11 @@ info:
   x-apievangelist-derived-on: '2026-08-02'
   x-apievangelist-provider-published: false
   x-apievangelist-split-from: openapi/_original/afero-cloud-api-openapi.yml
-externalDocs:
-  description: Afero Developer Docs
-  url: https://afero-docs.readthedocs.io/en/latest/
 servers:
 - url: https://api.afero.io
   description: Afero Cloud API production base URL
+security:
+- bearerAuth: []
 tags:
 - name: Devices
   description: 'Afero devices on an account: listing, real-time state, attribute actions and naming.'
@@ -43,8 +31,7 @@ paths:
       tags:
       - Devices
       summary: List current devices and state information
-      description: Lists the devices associated with the specified account. The response can be enriched
-        with the `expansions` query parameter to include device state, device tags, or device attributes.
+      description: Lists the devices associated with the specified account. The response can be enriched with the `expansions` query parameter to include device state, device tags, or device attributes.
       externalDocs:
         url: https://afero-docs.readthedocs.io/en/latest/API-DeviceEndpoints/
       parameters:
@@ -56,8 +43,7 @@ paths:
         required: true
       - name: expansions
         in: query
-        description: Selects the additional information returned for each device. One of `state`, `tags`
-          or `attributes`.
+        description: Selects the additional information returned for each device. One of `state`, `tags` or `attributes`.
         schema:
           type: string
           enum:
@@ -88,8 +74,7 @@ paths:
       tags:
       - Devices
       summary: Get a single device and its state information
-      description: Returns a single device on the specified account. The response can be enriched with
-        the `expansions` query parameter to include device state, device tags, or device attributes.
+      description: Returns a single device on the specified account. The response can be enriched with the `expansions` query parameter to include device state, device tags, or device attributes.
       externalDocs:
         url: https://afero-docs.readthedocs.io/en/latest/API-DeviceEndpoints/
       parameters:
@@ -107,8 +92,7 @@ paths:
         required: true
       - name: expansions
         in: query
-        description: Selects the additional information returned for each device. One of `state`, `tags`
-          or `attributes`.
+        description: Selects the additional information returned for each device. One of `state`, `tags` or `attributes`.
         schema:
           type: string
           enum:
@@ -137,9 +121,7 @@ paths:
       tags:
       - Devices
       summary: Execute an action on a device
-      description: 'Submits an attribute read or write against a device by attribute ID. `data` must be
-        hexadecimal encoded, little endian. Read and write commands are ASYNCHRONOUS: the call may return
-        before the read/write takes place, and if the device is offline the request may never complete.'
+      description: 'Submits an attribute read or write against a device by attribute ID. `data` must be hexadecimal encoded, little endian. Read and write commands are ASYNCHRONOUS: the call may return before the read/write takes place, and if the device is offline the request may never complete.'
       externalDocs:
         url: https://afero-docs.readthedocs.io/en/latest/API-DeviceEndpoints/
       parameters:
@@ -192,8 +174,7 @@ paths:
       tags:
       - Devices
       summary: Update the friendly name of a device
-      description: Changes the friendly name of the specified device. This name is visible in the Afero
-        Profile Editor.
+      description: Changes the friendly name of the specified device. This name is visible in the Afero Profile Editor.
       externalDocs:
         url: https://afero-docs.readthedocs.io/en/latest/API-DeviceEndpoints/
       parameters:
@@ -233,79 +214,7 @@ paths:
       security:
       - bearerAuth: []
 components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      description: 'The OAuth 2.0 access token returned by POST /oauth/token, sent as `Authorization:
-        Bearer <access_token>`. Tokens expire (approximately four hours per the Afero docs).'
   schemas:
-    DeviceTag:
-      type: object
-      description: Returned when the `tags` expansion is requested.
-      properties:
-        deviceTagId:
-          type: string
-        deviceTagType:
-          type: string
-          description: e.g. `SYSTEM`.
-        value:
-          type: string
-        localizationKey:
-          type: string
-    FriendlyName:
-      type: object
-      required:
-      - friendlyName
-      properties:
-        friendlyName:
-          type: string
-    Error:
-      type: object
-      description: The Afero Cloud API error envelope, observed live on api.afero.io (2026-08-02).
-      properties:
-        timestamp:
-          type: integer
-          description: Epoch milliseconds the error was produced.
-        status:
-          type: integer
-          description: The HTTP status code.
-        error:
-          type: string
-          description: The short error code, e.g. `unauthorized`.
-        error_description:
-          type: string
-          description: Human readable description of the error.
-        service_name:
-          type: string
-          description: The Afero service that produced the error, e.g. `ClientApi`.
-        region:
-          type: string
-          description: The Afero cloud region, e.g. `us-west-2`.
-    DeviceState:
-      type: object
-      description: Returned when the `state` expansion is requested.
-      properties:
-        available:
-          type: boolean
-        visible:
-          type: boolean
-        dirty:
-          type: boolean
-        rebooted:
-          type: boolean
-        connectable:
-          type: boolean
-        connected:
-          type: boolean
-        linked:
-          type: boolean
-        rssi:
-          type: integer
-        updatedTimestamp:
-          type: integer
-        location:
-          $ref: '#/components/schemas/DeviceLocation'
     DeviceLocation:
       type: object
       properties:
@@ -314,6 +223,18 @@ components:
         longitude:
           type: string
         lastUpdatedTimestamp:
+          type: integer
+    DeviceAttribute:
+      type: object
+      description: Returned when the `attributes` expansion is requested.
+      properties:
+        id:
+          type: integer
+          description: The device attribute ID.
+        data:
+          type: string
+          description: Hexadecimal encoded, little endian attribute value.
+        updatedTimestamp:
           type: integer
     ActionSource:
       type: object
@@ -327,6 +248,37 @@ components:
           type: string
         lastName:
           type: string
+    DeviceTag:
+      type: object
+      description: Returned when the `tags` expansion is requested.
+      properties:
+        deviceTagId:
+          type: string
+        deviceTagType:
+          type: string
+          description: e.g. `SYSTEM`.
+        value:
+          type: string
+        localizationKey:
+          type: string
+    DeviceAction:
+      type: object
+      required:
+      - type
+      - attrId
+      properties:
+        type:
+          type: string
+          enum:
+          - attribute_read
+          - attribute_write
+          description: The action to perform. The attribute must support the operation.
+        attrId:
+          type: integer
+          description: The device attribute ID to read or write.
+        data:
+          type: string
+          description: Hexadecimal encoded, little endian value to write.
     Device:
       type: object
       properties:
@@ -362,36 +314,59 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DeviceAttribute'
-    DeviceAttribute:
-      type: object
-      description: Returned when the `attributes` expansion is requested.
-      properties:
-        id:
-          type: integer
-          description: The device attribute ID.
-        data:
-          type: string
-          description: Hexadecimal encoded, little endian attribute value.
-        updatedTimestamp:
-          type: integer
-    DeviceAction:
+    FriendlyName:
       type: object
       required:
-      - type
-      - attrId
+      - friendlyName
       properties:
-        type:
+        friendlyName:
           type: string
-          enum:
-          - attribute_read
-          - attribute_write
-          description: The action to perform. The attribute must support the operation.
-        attrId:
+    DeviceState:
+      type: object
+      description: Returned when the `state` expansion is requested.
+      properties:
+        available:
+          type: boolean
+        visible:
+          type: boolean
+        dirty:
+          type: boolean
+        rebooted:
+          type: boolean
+        connectable:
+          type: boolean
+        connected:
+          type: boolean
+        linked:
+          type: boolean
+        rssi:
           type: integer
-          description: The device attribute ID to read or write.
-        data:
+        updatedTimestamp:
+          type: integer
+        location:
+          $ref: '#/components/schemas/DeviceLocation'
+    Error:
+      type: object
+      description: The Afero Cloud API error envelope, observed live on api.afero.io (2026-08-02).
+      properties:
+        timestamp:
+          type: integer
+          description: Epoch milliseconds the error was produced.
+        status:
+          type: integer
+          description: The HTTP status code.
+        error:
           type: string
-          description: Hexadecimal encoded, little endian value to write.
+          description: The short error code, e.g. `unauthorized`.
+        error_description:
+          type: string
+          description: Human readable description of the error.
+        service_name:
+          type: string
+          description: The Afero service that produced the error, e.g. `ClientApi`.
+        region:
+          type: string
+          description: The Afero cloud region, e.g. `us-west-2`.
     DeviceActionResult:
       type: object
       properties:
@@ -420,17 +395,23 @@ components:
             error_description: Full authentication is required to access this resource
             service_name: ClientApi
             region: us-west-2
-    Forbidden:
-      description: The authenticated principal does not hold the required account or partner privilege.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     NotFound:
       description: The requested resource does not exist.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-security:
-- bearerAuth: []
+    Forbidden:
+      description: The authenticated principal does not hold the required account or partner privilege.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'The OAuth 2.0 access token returned by POST /oauth/token, sent as `Authorization: Bearer <access_token>`. Tokens expire (approximately four hours per the Afero docs).'
+externalDocs:
+  description: Afero Developer Docs
+  url: https://afero-docs.readthedocs.io/en/latest/

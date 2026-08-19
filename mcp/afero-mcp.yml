@@ -3,17 +3,17 @@ method: derived
 status: candidate
 source: openapi/_original/afero-cloud-api-openapi.yml
 note: Afero publishes NO hosted or remote MCP server (searched the Afero docs, the aferodeveloper GitHub
-  organisation, npm @modelcontextprotocol and the public MCP registries on 2026-08-02). The tool set
-  below is a CANDIDATE derived from the operations of the derived Afero Cloud OpenAPI — it is a design
-  proposal, not an Afero product.
+  organisation, npm @modelcontextprotocol and the public MCP registries on 2026-08-02). The tool set below
+  is a CANDIDATE derived from the operations of the derived Afero Cloud OpenAPI — it is a design proposal,
+  not an Afero product.
 server:
   name: afero
   transport: http
   url: null
 authentication:
   type: oauth2-password-grant
-  note: An MCP server would need to broker the Afero /oauth/token password grant and refresh the ~4h
-    bearer token; Afero has no client-credentials or authorization-code flow.
+  note: An MCP server would need to broker the Afero /oauth/token password grant and refresh the ~4h bearer
+    token; Afero has no client-credentials or authorization-code flow.
 tools:
 - name: get_current_user
   description: Get the authenticated Afero user, their account access and partner privileges.
@@ -58,3 +58,9 @@ tools:
 apis_yml_pointer: 'none — no `type: MCPServer` pointer is wired in apis.yml on purpose. Afero publishes
   no MCP server, and the mcp_server_present / mcp_server scoring checks must not be credited for a candidate
   design proposal.'
+deployment:
+  mode: none
+  verified: derived
+  tools: 9
+  checked: '2026-08-12'
+  source: catalog MCP census

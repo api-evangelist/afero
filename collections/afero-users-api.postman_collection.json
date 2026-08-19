@@ -1,0 +1,176 @@
+{
+  "item": [
+    {
+      "id": "f189ed4c-1b4c-411b-8628-fe8129c5f544",
+      "name": "Users",
+      "description": {
+        "content": "The authenticated end-user, their account and partner access, and terms of service.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "75b0134e-8b6c-4e24-9851-349c9ebb3ef6",
+          "name": "Get information about a user",
+          "request": {
+            "name": "Get information about a user",
+            "description": {
+              "content": "Returns user-specific information for the authenticated end-user: the accounts the user can access and the privileges held on each, the sign-in credential, the partner accounts and partner privileges held, and the terms-of-service versions accepted or awaiting acceptance.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "users",
+                "me"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "b7cc7392-5356-4729-8e62-510c618ab8d2",
+              "name": "The authenticated user.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "users",
+                    "me"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"userId\": \"string\",\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"credential\": {\n    \"credentialId\": \"string\",\n    \"failedAttempts\": 1597,\n    \"lastUsedTimestamp\": 7707,\n    \"type\": \"string\",\n    \"verified\": false\n  },\n  \"accountAccess\": [\n    {\n      \"account\": {\n        \"accountId\": \"string\",\n        \"createdTimestamp\": 8683,\n        \"description\": \"string\",\n        \"type\": \"string\"\n      },\n      \"privileges\": {\n        \"canWrite\": true,\n        \"owner\": false\n      }\n    },\n    {\n      \"account\": {\n        \"accountId\": \"string\",\n        \"createdTimestamp\": 5472,\n        \"description\": \"string\",\n        \"type\": \"string\"\n      },\n      \"privileges\": {\n        \"canWrite\": false,\n        \"owner\": true\n      }\n    }\n  ],\n  \"partnerAccess\": [\n    {\n      \"partner\": {\n        \"partnerId\": \"string\",\n        \"name\": \"string\",\n        \"clientId\": \"string\",\n        \"clientSecret\": \"string\",\n        \"createdTimestamp\": 2276\n      },\n      \"privileges\": {\n        \"inviteUsers\": true,\n        \"manageDeviceProfiles\": true,\n        \"owner\": false,\n        \"viewDeviceInfo\": true\n      }\n    },\n    {\n      \"partner\": {\n        \"partnerId\": \"string\",\n        \"name\": \"string\",\n        \"clientId\": \"string\",\n        \"clientSecret\": \"string\",\n        \"createdTimestamp\": 570\n      },\n      \"privileges\": {\n        \"inviteUsers\": true,\n        \"manageDeviceProfiles\": true,\n        \"owner\": true,\n        \"viewDeviceInfo\": false\n      }\n    }\n  ],\n  \"tos\": [\n    {\n      \"tosType\": \"string\",\n      \"currentVersion\": 219,\n      \"userVersion\": 6140,\n      \"needsAcceptance\": true,\n      \"url\": \"http://ELsBqUDADvSXYHOqegQtnPaYIZcc.ekjgwwIC,5axqHYW,xSOyejuRh-MCaoGFP+zRWRmuZmV-BSQSQVsVKKaYmJRViVm88WKh+9mwBzaG1\"\n    },\n    {\n      \"tosType\": \"string\",\n      \"currentVersion\": 8200,\n      \"userVersion\": 5602,\n      \"needsAcceptance\": false,\n      \"url\": \"http://ubXJXpgPpjTQMxNUjBsosoQZ.hjgejfs6nBgt7867G2VGa7SRaShp5q.Tgy2MfhE5Y1GhATLYssNkHLAlIK,.FG.JVeq0+SCpN0M\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9cd874c0-aa0a-48c1-9838-111d30a3bcbf",
+              "name": "Full authentication is required to access this resource.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "users",
+                    "me"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": 1785679681261,\n  \"status\": 401,\n  \"error\": \"unauthorized\",\n  \"error_description\": \"Full authentication is required to access this resource\",\n  \"service_name\": \"ClientApi\",\n  \"region\": \"us-west-2\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.afero.io",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "f7a94a8e-3d42-4259-a10f-ce7784089268",
+    "name": "Afero Cloud Users API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Afero Cloud API is the RESTful control plane for the Afero IoT platform: it lists the devices and users on an Afero account, reports real-time device state, executes attribute read/write actions against connected devices, and manages the over-the-air (OTA) firmware pipeline — firmware types, firmware pool images, binary upload, device-type associations, firmware tags, and firmware pushes. All requests are made over TLS to https://api.afero.io and are authenticated with an OAuth 2.0 bearer access token obtained from the /oauth/token endpoint using the partner OAuth Client ID and Client Secret issued in the Afero Profile Editor. This OpenAPI was DERIVED by API Evangelist from Afero's public developer documentation (resource URLs, HTTP methods, request headers, request payload model schemas, response model schemas and examples transcribed verbatim from the docs); it is NOT a provider-published specification. Afero publishes no machine-readable spec: https://api.afero.io/api-docs and https://api.afero.io/v1/openapi.json both answer HTTP 401 (authenticated access required), probed 2026-08-02.\n\nContact Support:\n Name: Afero Developer Documentation\n Email: sales@afero.io",
+      "type": "text/plain"
+    }
+  }
+}

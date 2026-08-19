@@ -1,19 +1,8 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Afero Cloud Authentication API
   version: v1
-  description: 'The Afero Cloud API is the RESTful control plane for the Afero IoT platform: it lists
-    the devices and users on an Afero account, reports real-time device state, executes attribute read/write
-    actions against connected devices, and manages the over-the-air (OTA) firmware pipeline — firmware
-    types, firmware pool images, binary upload, device-type associations, firmware tags, and firmware
-    pushes. All requests are made over TLS to https://api.afero.io and are authenticated with an OAuth
-    2.0 bearer access token obtained from the /oauth/token endpoint using the partner OAuth Client ID
-    and Client Secret issued in the Afero Profile Editor. This OpenAPI was DERIVED by API Evangelist from
-    Afero''s public developer documentation (resource URLs, HTTP methods, request headers, request payload
-    model schemas, response model schemas and examples transcribed verbatim from the docs); it is NOT
-    a provider-published specification. Afero publishes no machine-readable spec: https://api.afero.io/api-docs
-    and https://api.afero.io/v1/openapi.json both answer HTTP 401 (authenticated access required), probed
-    2026-08-02.'
+  description: 'The Afero Cloud API is the RESTful control plane for the Afero IoT platform: it lists the devices and users on an Afero account, reports real-time device state, executes attribute read/write actions against connected devices, and manages the over-the-air (OTA) firmware pipeline — firmware types, firmware pool images, binary upload, device-type associations, firmware tags, and firmware pushes. All requests are made over TLS to https://api.afero.io and are authenticated with an OAuth 2.0 bearer access token obtained from the /oauth/token endpoint using the partner OAuth Client ID and Client Secret issued in the Afero Profile Editor. This OpenAPI was DERIVED by API Evangelist from Afero''s public developer documentation (resource URLs, HTTP methods, request headers, request payload model schemas, response model schemas and examples transcribed verbatim from the docs); it is NOT a provider-published specification. Afero publishes no machine-readable spec: https://api.afero.io/api-docs and https://api.afero.io/v1/openapi.json both answer HTTP 401 (authenticated access required), probed 2026-08-02.'
   contact:
     name: Afero Developer Documentation
     url: https://afero-docs.readthedocs.io/en/latest/CloudAPIs/
@@ -25,9 +14,6 @@ info:
   x-apievangelist-derived-on: '2026-08-02'
   x-apievangelist-provider-published: false
   x-apievangelist-split-from: openapi/_original/afero-cloud-api-openapi.yml
-externalDocs:
-  description: Afero Developer Docs
-  url: https://afero-docs.readthedocs.io/en/latest/
 servers:
 - url: https://api.afero.io
   description: Afero Cloud API production base URL
@@ -43,10 +29,7 @@ paths:
       tags:
       - Authentication
       summary: OAuth Authentication
-      description: 'Authenticate an end-user and generate an OAuth 2.0 access token used to authenticate
-        subsequent requests on behalf of that end-user. The Authorization header is HTTP Basic: the string
-        `Basic ` followed by the Base64 encoding of `<OAuth Client ID>:<OAuth Client Secret>`. The returned
-        access token expires (the docs note approximately four hours; the `expires_in` value is in seconds).'
+      description: 'Authenticate an end-user and generate an OAuth 2.0 access token used to authenticate subsequent requests on behalf of that end-user. The Authorization header is HTTP Basic: the string `Basic ` followed by the Base64 encoding of `<OAuth Client ID>:<OAuth Client Secret>`. The returned access token expires (the docs note approximately four hours; the `expires_in` value is in seconds).'
       externalDocs:
         url: https://afero-docs.readthedocs.io/en/latest/API-OAuthEndpoints/
       requestBody:
@@ -72,47 +55,7 @@ paths:
       security:
       - basicAuth: []
 components:
-  securitySchemes:
-    basicAuth:
-      type: http
-      scheme: basic
-      description: HTTP Basic with the partner OAuth Client ID as username and OAuth Client Secret as
-        password, used only on POST /oauth/token.
   schemas:
-    AccessToken:
-      type: object
-      properties:
-        access_token:
-          type: string
-          description: The bearer access token.
-        token_type:
-          type: string
-          description: The token type; `bearer`.
-        expires_in:
-          type: integer
-          description: Seconds until the token expires.
-        scope:
-          type: string
-          description: Space-delimited granted scopes, e.g. `partner account`.
-    TokenRequest:
-      type: object
-      required:
-      - username
-      - password
-      - grant_type
-      properties:
-        username:
-          type: string
-          description: The end-user's Afero username (email address).
-        password:
-          type: string
-          format: password
-          description: The end-user's Afero password.
-        grant_type:
-          type: string
-          enum:
-          - password
-          description: The OAuth 2.0 grant type.
     Error:
       type: object
       description: The Afero Cloud API error envelope, observed live on api.afero.io (2026-08-02).
@@ -135,6 +78,40 @@ components:
         region:
           type: string
           description: The Afero cloud region, e.g. `us-west-2`.
+    TokenRequest:
+      type: object
+      required:
+      - username
+      - password
+      - grant_type
+      properties:
+        username:
+          type: string
+          description: The end-user's Afero username (email address).
+        password:
+          type: string
+          format: password
+          description: The end-user's Afero password.
+        grant_type:
+          type: string
+          enum:
+          - password
+          description: The OAuth 2.0 grant type.
+    AccessToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: The bearer access token.
+        token_type:
+          type: string
+          description: The token type; `bearer`.
+        expires_in:
+          type: integer
+          description: Seconds until the token expires.
+        scope:
+          type: string
+          description: Space-delimited granted scopes, e.g. `partner account`.
   responses:
     Unauthorized:
       description: Full authentication is required to access this resource.
@@ -149,3 +126,11 @@ components:
             error_description: Full authentication is required to access this resource
             service_name: ClientApi
             region: us-west-2
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic with the partner OAuth Client ID as username and OAuth Client Secret as password, used only on POST /oauth/token.
+externalDocs:
+  description: Afero Developer Docs
+  url: https://afero-docs.readthedocs.io/en/latest/

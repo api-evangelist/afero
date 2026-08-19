@@ -1,0 +1,26 @@
+{
+  "provider": "afero",
+  "sources": [
+    "afero-authentication-api-openapi.yml",
+    "afero-devices-api-openapi.yml",
+    "afero-ota-api-openapi.yml",
+    "afero-users-api-openapi.yml"
+  ],
+  "outputs": [
+    "afero-authentication-api-openapi.yml",
+    "afero-devices-api-openapi.yml",
+    "afero-ota-api-openapi.yml",
+    "afero-users-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "afero-authentication-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "afero-devices-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "afero-ota-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "afero-users-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": []
+}

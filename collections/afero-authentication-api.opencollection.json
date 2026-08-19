@@ -1,0 +1,38 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Afero Cloud Authentication API",
+    "version": "v1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Authentication",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "OAuth Authentication",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.afero.io/oauth/token",
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Authenticate an end-user and generate an OAuth 2.0 access token used to authenticate subsequent requests on behalf of that end-user. The Authorization header is HTTP Basic: the string `Basic ` followed by the Base64 encoding of `<OAuth Client ID>:<OAuth Client Secret>`. The returned access token expires (the docs note approximately four hours; the `expires_in` value is in seconds)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

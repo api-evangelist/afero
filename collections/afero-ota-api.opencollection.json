@@ -1,0 +1,751 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Afero Cloud Firmware OTA API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "OTA",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve partner firmware types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.afero.io/v1/ota/partners/:partnerId/types",
+            "params": [
+              {
+                "name": "partnerId",
+                "value": "",
+                "type": "path",
+                "description": "The partner ID."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves the firmware types defined for the partner."
+        },
+        {
+          "info": {
+            "name": "Create a partner firmware type",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.afero.io/v1/ota/partners/:partnerId/types",
+            "params": [
+              {
+                "name": "partnerId",
+                "value": "",
+                "type": "path",
+                "description": "The partner ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Creates a new partner firmware type. Firmware types categorize firmware; platform firmware types occupy 1-100 and MCU firmware types 101-200."
+        },
+        {
+          "info": {
+            "name": "Retrieve a firmware type by type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.afero.io/v1/ota/partners/:partnerId/types/:type",
+            "params": [
+              {
+                "name": "partnerId",
+                "value": "",
+                "type": "path",
+                "description": "The partner ID."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "path",
+                "description": "The firmware type. Platform firmware types are 1-100; MCU firmware types are 101-200."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves the partner firmware type identified by the given type number."
+        },
+        {
+          "info": {
+            "name": "Update a partner firmware type",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.afero.io/v1/ota/partners/:partnerId/types/:type",
+            "params": [
+              {
+                "name": "partnerId",
+                "value": "",
+                "type": "path",
+                "description": "The partner ID."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "path",
+                "description": "The firmware type. Platform firmware types are 1-100; MCU firmware types are 101-200."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Updates the name and description of a partner firmware type."
+        },
+        {
+          "info": {
+            "name": "Retrieve firmware images from the pool",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.afero.io/v1/ota/partners/:partnerId/pool",
+            "params": [
+              {
+                "name": "partnerId",
+                "value": "",
+                "type": "path",
+                "description": "The partner ID."
+              },
+              {
+                "name": "tags",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of tags on which to filter."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Zero-based index of the page to retrieve."
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "The number of elements per page. Default page size is 50."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "The field and sort direction; e.g. `updatedTimestamp`, `description`."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves a paged result set of firmware images in the partner firmware pool."
+        },
+        {
+          "info": {
+            "name": "Create a firmware record in the firmware pool",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.afero.io/v1/ota/partners/:partnerId/pool",
+            "params": [
+              {
+                "name": "partnerId",
+                "value": "",
+                "type": "path",
+                "description": "The partner ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Creates a new firmware record in the partner firmware image pool. The optional `associations` map keys are partner IDs and its values are arrays of device type IDs; associations can be created or deleted at any time after the pool image exists."
+        },
+        {
+          "info": {
+            "name": "Upload a firmware binary to a temporary location",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.afero.io/v1/ota/partners/:partnerId/binaries",
+            "params": [
+              {
+                "name": "partnerId",
+                "value": "",
+                "type": "path",
+                "description": "The partner ID."
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "file",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Uploads a firmware file to a temporary location, either as a raw file stream (`application/octet-stream`) or as a browser-style upload (`multipart/form-data`). The returned `value` is the file identifier of the uploaded file — the SHA-256 hash of the file."
+        },
+        {
+          "info": {
+            "name": "Move a binary into the firmware repository",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.afero.io/v1/ota/partners/:partnerId/binaries/moveToRepository",
+            "params": [
+              {
+                "name": "partnerId",
+                "value": "",
+                "type": "path",
+                "description": "The partner ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Moves an uploaded file from the temporary location into the permanent firmware image repository. Send the response body of uploadFirmwareBinary as the payload. The response `value` is the repository URL of the firmware binary, which must be used to update the firmware pool record — otherwise the OTA service cannot send updates."
+        },
+        {
+          "info": {
+            "name": "Retrieve pool firmware images of a type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.afero.io/v1/ota/partners/:partnerId/pool/types/:type",
+            "params": [
+              {
+                "name": "partnerId",
+                "value": "",
+                "type": "path",
+                "description": "The partner ID."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "path",
+                "description": "The firmware type. Platform firmware types are 1-100; MCU firmware types are 101-200."
+              },
+              {
+                "name": "tags",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of tags on which to filter."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Zero-based index of the page to retrieve."
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "The number of elements per page. Default page size is 50."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "The field and sort direction; e.g. `updatedTimestamp`, `description`."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves a paged result set of pool firmware images of a specific firmware type."
+        },
+        {
+          "info": {
+            "name": "Check whether a pool firmware image exists",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.afero.io/v1/ota/partners/:partnerId/pool/types/:type/names/:name/versions/:version/exists",
+            "params": [
+              {
+                "name": "partnerId",
+                "value": "",
+                "type": "path",
+                "description": "The partner ID."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "path",
+                "description": "The firmware type. Platform firmware types are 1-100; MCU firmware types are 101-200."
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the firmware image."
+              },
+              {
+                "name": "version",
+                "value": "",
+                "type": "path",
+                "description": "The version string of the firmware image."
+              },
+              {
+                "name": "excludeFirmwareImageId",
+                "value": "",
+                "type": "query",
+                "description": "The ID of a record to exclude from the check."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Checks whether a firmware image with the given type, name and version string already exists in the pool. `excludeFirmwareImageId` lets a client exclude the record it is about to update."
+        },
+        {
+          "info": {
+            "name": "Retrieve device type associations of a pool firmware image",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.afero.io/v1/ota/partners/:partnerId/pool/types/:type/versionNumbers/:versionNumber/associations",
+            "params": [
+              {
+                "name": "partnerId",
+                "value": "",
+                "type": "path",
+                "description": "The partner ID."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "path",
+                "description": "The firmware type. Platform firmware types are 1-100; MCU firmware types are 101-200."
+              },
+              {
+                "name": "versionNumber",
+                "value": "",
+                "type": "path",
+                "description": "The globally unique, platform-generated version number of the firmware image."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves all device type associations of the given pool firmware image."
+        },
+        {
+          "info": {
+            "name": "Update a firmware image in the pool",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.afero.io/v1/ota/partners/:partnerId/pool/types/:type/versionNumbers/:versionNumber",
+            "params": [
+              {
+                "name": "partnerId",
+                "value": "",
+                "type": "path",
+                "description": "The partner ID."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "path",
+                "description": "The firmware type. Platform firmware types are 1-100; MCU firmware types are 101-200."
+              },
+              {
+                "name": "versionNumber",
+                "value": "",
+                "type": "path",
+                "description": "The globally unique, platform-generated version number of the firmware image."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Updates the name, description, version string, binary URL and tags of a pool firmware image."
+        },
+        {
+          "info": {
+            "name": "Retrieve firmware images associated with a device type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.afero.io/v1/ota/partners/:partnerId/deviceTypes/:deviceTypeId/firmwareImages",
+            "params": [
+              {
+                "name": "partnerId",
+                "value": "",
+                "type": "path",
+                "description": "The partner ID."
+              },
+              {
+                "name": "deviceTypeId",
+                "value": "",
+                "type": "path",
+                "description": "The device type ID."
+              },
+              {
+                "name": "tags",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of tags on which to filter."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Zero-based index of the page to retrieve."
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "The number of elements per page. Default page size is 50."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "The field and sort direction; e.g. `updatedTimestamp`, `description`."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves a paged result set of firmware image records associated with a device type. Records of type 4 (DEVICE_DESCRIPTION) carry the two additional fields `deviceDescriptionId` and `deviceProfileId`."
+        },
+        {
+          "info": {
+            "name": "Associate a firmware image with a device type",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.afero.io/v1/ota/partners/:partnerId/deviceTypes/:deviceTypeId/firmwareImages",
+            "params": [
+              {
+                "name": "partnerId",
+                "value": "",
+                "type": "path",
+                "description": "The partner ID."
+              },
+              {
+                "name": "deviceTypeId",
+                "value": "",
+                "type": "path",
+                "description": "The device type ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Creates an association between a generic firmware image record in the firmware pool and a specific device type, so the image becomes eligible for OTA. `versionNumber` is required. Afero recommends sending the object returned by one of the firmware pool GET endpoints unmodified — modifying it causes errors and prevents OTAs from succeeding."
+        },
+        {
+          "info": {
+            "name": "Retrieve device type firmware images by firmware type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.afero.io/v1/ota/partners/:partnerId/deviceTypes/:deviceTypeId/firmwareImages/types/:type",
+            "params": [
+              {
+                "name": "partnerId",
+                "value": "",
+                "type": "path",
+                "description": "The partner ID."
+              },
+              {
+                "name": "deviceTypeId",
+                "value": "",
+                "type": "path",
+                "description": "The device type ID."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "path",
+                "description": "The firmware type. Platform firmware types are 1-100; MCU firmware types are 101-200."
+              },
+              {
+                "name": "tags",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of tags on which to filter."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Zero-based index of the page to retrieve."
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "The number of elements per page. Default page size is 50."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "The field and sort direction; e.g. `updatedTimestamp`, `description`."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves a paged result set of firmware image records for a device type filtered to one firmware type."
+        },
+        {
+          "info": {
+            "name": "Retrieve a device type firmware image by type and version number",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.afero.io/v1/ota/partners/:partnerId/deviceTypes/:deviceTypeId/firmwareImages/types/:type/versionNumbers/:versionNumber",
+            "params": [
+              {
+                "name": "partnerId",
+                "value": "",
+                "type": "path",
+                "description": "The partner ID."
+              },
+              {
+                "name": "deviceTypeId",
+                "value": "",
+                "type": "path",
+                "description": "The device type ID."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "path",
+                "description": "The firmware type. Platform firmware types are 1-100; MCU firmware types are 101-200."
+              },
+              {
+                "name": "versionNumber",
+                "value": "",
+                "type": "path",
+                "description": "The globally unique, platform-generated version number of the firmware image."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Zero-based index of the page to retrieve."
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "The number of elements per page. Default page size is 50."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "The field and sort direction; e.g. `updatedTimestamp`, `description`."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves the single firmware image record associated with a device type for the given firmware type and version number."
+        },
+        {
+          "info": {
+            "name": "Dissociate a firmware image from a device type",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.afero.io/v1/ota/partners/:partnerId/deviceTypes/:deviceTypeId/firmwareImages/types/:type/versionNumbers/:versionNumber",
+            "params": [
+              {
+                "name": "partnerId",
+                "value": "",
+                "type": "path",
+                "description": "The partner ID."
+              },
+              {
+                "name": "deviceTypeId",
+                "value": "",
+                "type": "path",
+                "description": "The device type ID."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "path",
+                "description": "The firmware type. Platform firmware types are 1-100; MCU firmware types are 101-200."
+              },
+              {
+                "name": "versionNumber",
+                "value": "",
+                "type": "path",
+                "description": "The globally unique, platform-generated version number of the firmware image."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Dissociates a firmware image from a device type. NOTE: the Afero docs page heading names this operation DELETE while the HTTP METHOD line on the same section reads PUT — the heading is used here and the discrepancy is recorded in the API Evangelist review."
+        },
+        {
+          "info": {
+            "name": "Push a firmware image to a device",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.afero.io/v1/ota/partners/:partnerId/deviceTypes/:deviceTypeId/firmwareImages/:firmwareImageId/push",
+            "params": [
+              {
+                "name": "partnerId",
+                "value": "",
+                "type": "path",
+                "description": "The partner ID."
+              },
+              {
+                "name": "deviceTypeId",
+                "value": "",
+                "type": "path",
+                "description": "The device type ID."
+              },
+              {
+                "name": "firmwareImageId",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the firmware image to push to a device."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Pushes a firmware image to a target device. The payload `value` is the device ID of the target device."
+        },
+        {
+          "info": {
+            "name": "Retrieve all firmware tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.afero.io/v1/ota/partners/:partnerId/tags",
+            "params": [
+              {
+                "name": "partnerId",
+                "value": "",
+                "type": "path",
+                "description": "The partner ID."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves all firmware tags defined for the partner."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

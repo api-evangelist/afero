@@ -1,19 +1,8 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Afero Cloud OTA Firmware API
+  title: Afero Cloud Firmware OTA API
   version: v1
-  description: 'The Afero Cloud API is the RESTful control plane for the Afero IoT platform: it lists
-    the devices and users on an Afero account, reports real-time device state, executes attribute read/write
-    actions against connected devices, and manages the over-the-air (OTA) firmware pipeline — firmware
-    types, firmware pool images, binary upload, device-type associations, firmware tags, and firmware
-    pushes. All requests are made over TLS to https://api.afero.io and are authenticated with an OAuth
-    2.0 bearer access token obtained from the /oauth/token endpoint using the partner OAuth Client ID
-    and Client Secret issued in the Afero Profile Editor. This OpenAPI was DERIVED by API Evangelist from
-    Afero''s public developer documentation (resource URLs, HTTP methods, request headers, request payload
-    model schemas, response model schemas and examples transcribed verbatim from the docs); it is NOT
-    a provider-published specification. Afero publishes no machine-readable spec: https://api.afero.io/api-docs
-    and https://api.afero.io/v1/openapi.json both answer HTTP 401 (authenticated access required), probed
-    2026-08-02.'
+  description: 'The Afero Cloud API is the RESTful control plane for the Afero IoT platform: it lists the devices and users on an Afero account, reports real-time device state, executes attribute read/write actions against connected devices, and manages the over-the-air (OTA) firmware pipeline — firmware types, firmware pool images, binary upload, device-type associations, firmware tags, and firmware pushes. All requests are made over TLS to https://api.afero.io and are authenticated with an OAuth 2.0 bearer access token obtained from the /oauth/token endpoint using the partner OAuth Client ID and Client Secret issued in the Afero Profile Editor. This OpenAPI was DERIVED by API Evangelist from Afero''s public developer documentation (resource URLs, HTTP methods, request headers, request payload model schemas, response model schemas and examples transcribed verbatim from the docs); it is NOT a provider-published specification. Afero publishes no machine-readable spec: https://api.afero.io/api-docs and https://api.afero.io/v1/openapi.json both answer HTTP 401 (authenticated access required), probed 2026-08-02.'
   contact:
     name: Afero Developer Documentation
     url: https://afero-docs.readthedocs.io/en/latest/CloudAPIs/
@@ -25,16 +14,14 @@ info:
   x-apievangelist-derived-on: '2026-08-02'
   x-apievangelist-provider-published: false
   x-apievangelist-split-from: openapi/_original/afero-cloud-api-openapi.yml
-externalDocs:
-  description: Afero Developer Docs
-  url: https://afero-docs.readthedocs.io/en/latest/
 servers:
 - url: https://api.afero.io
   description: Afero Cloud API production base URL
+security:
+- bearerAuth: []
 tags:
 - name: OTA
-  description: 'Over-the-air firmware management: firmware types, the firmware pool, binaries, device
-    type associations, tags and pushes.'
+  description: 'Over-the-air firmware management: firmware types, the firmware pool, binaries, device type associations, tags and pushes.'
   externalDocs:
     url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints/
 paths:
@@ -44,8 +31,7 @@ paths:
       tags:
       - OTA
       summary: Create a partner firmware type
-      description: Creates a new partner firmware type. Firmware types categorize firmware; platform firmware
-        types occupy 1-100 and MCU firmware types 101-200.
+      description: Creates a new partner firmware type. Firmware types categorize firmware; platform firmware types occupy 1-100 and MCU firmware types 101-200.
       externalDocs:
         url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
       parameters:
@@ -191,9 +177,7 @@ paths:
       tags:
       - OTA
       summary: Create a firmware record in the firmware pool
-      description: Creates a new firmware record in the partner firmware image pool. The optional `associations`
-        map keys are partner IDs and its values are arrays of device type IDs; associations can be created
-        or deleted at any time after the pool image exists.
+      description: Creates a new firmware record in the partner firmware image pool. The optional `associations` map keys are partner IDs and its values are arrays of device type IDs; associations can be created or deleted at any time after the pool image exists.
       externalDocs:
         url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
       parameters:
@@ -284,9 +268,7 @@ paths:
       tags:
       - OTA
       summary: Upload a firmware binary to a temporary location
-      description: Uploads a firmware file to a temporary location, either as a raw file stream (`application/octet-stream`)
-        or as a browser-style upload (`multipart/form-data`). The returned `value` is the file identifier
-        of the uploaded file — the SHA-256 hash of the file.
+      description: Uploads a firmware file to a temporary location, either as a raw file stream (`application/octet-stream`) or as a browser-style upload (`multipart/form-data`). The returned `value` is the file identifier of the uploaded file — the SHA-256 hash of the file.
       externalDocs:
         url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
       parameters:
@@ -331,10 +313,7 @@ paths:
       tags:
       - OTA
       summary: Move a binary into the firmware repository
-      description: Moves an uploaded file from the temporary location into the permanent firmware image
-        repository. Send the response body of uploadFirmwareBinary as the payload. The response `value`
-        is the repository URL of the firmware binary, which must be used to update the firmware pool record
-        — otherwise the OTA service cannot send updates.
+      description: Moves an uploaded file from the temporary location into the permanent firmware image repository. Send the response body of uploadFirmwareBinary as the payload. The response `value` is the repository URL of the firmware binary, which must be used to update the firmware pool record — otherwise the OTA service cannot send updates.
       externalDocs:
         url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
       parameters:
@@ -432,8 +411,7 @@ paths:
       tags:
       - OTA
       summary: Check whether a pool firmware image exists
-      description: Checks whether a firmware image with the given type, name and version string already
-        exists in the pool. `excludeFirmwareImageId` lets a client exclude the record it is about to update.
+      description: Checks whether a firmware image with the given type, name and version string already exists in the pool. `excludeFirmwareImageId` lets a client exclude the record it is about to update.
       externalDocs:
         url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
       parameters:
@@ -533,8 +511,7 @@ paths:
       tags:
       - OTA
       summary: Update a firmware image in the pool
-      description: Updates the name, description, version string, binary URL and tags of a pool firmware
-        image.
+      description: Updates the name, description, version string, binary URL and tags of a pool firmware image.
       externalDocs:
         url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
       parameters:
@@ -579,10 +556,7 @@ paths:
       tags:
       - OTA
       summary: Associate a firmware image with a device type
-      description: Creates an association between a generic firmware image record in the firmware pool
-        and a specific device type, so the image becomes eligible for OTA. `versionNumber` is required.
-        Afero recommends sending the object returned by one of the firmware pool GET endpoints unmodified
-        — modifying it causes errors and prevents OTAs from succeeding.
+      description: Creates an association between a generic firmware image record in the firmware pool and a specific device type, so the image becomes eligible for OTA. `versionNumber` is required. Afero recommends sending the object returned by one of the firmware pool GET endpoints unmodified — modifying it causes errors and prevents OTAs from succeeding.
       externalDocs:
         url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
       parameters:
@@ -624,9 +598,7 @@ paths:
       tags:
       - OTA
       summary: Retrieve firmware images associated with a device type
-      description: Retrieves a paged result set of firmware image records associated with a device type.
-        Records of type 4 (DEVICE_DESCRIPTION) carry the two additional fields `deviceDescriptionId` and
-        `deviceProfileId`.
+      description: Retrieves a paged result set of firmware image records associated with a device type. Records of type 4 (DEVICE_DESCRIPTION) carry the two additional fields `deviceDescriptionId` and `deviceProfileId`.
       externalDocs:
         url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
       parameters:
@@ -687,8 +659,7 @@ paths:
       tags:
       - OTA
       summary: Retrieve device type firmware images by firmware type
-      description: Retrieves a paged result set of firmware image records for a device type filtered to
-        one firmware type.
+      description: Retrieves a paged result set of firmware image records for a device type filtered to one firmware type.
       externalDocs:
         url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
       parameters:
@@ -755,8 +726,7 @@ paths:
       tags:
       - OTA
       summary: Retrieve a device type firmware image by type and version number
-      description: Retrieves the single firmware image record associated with a device type for the given
-        firmware type and version number.
+      description: Retrieves the single firmware image record associated with a device type for the given firmware type and version number.
       externalDocs:
         url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
       parameters:
@@ -822,9 +792,7 @@ paths:
       tags:
       - OTA
       summary: Dissociate a firmware image from a device type
-      description: 'Dissociates a firmware image from a device type. NOTE: the Afero docs page heading
-        names this operation DELETE while the HTTP METHOD line on the same section reads PUT — the heading
-        is used here and the discrepancy is recorded in the API Evangelist review.'
+      description: 'Dissociates a firmware image from a device type. NOTE: the Afero docs page heading names this operation DELETE while the HTTP METHOD line on the same section reads PUT — the heading is used here and the discrepancy is recorded in the API Evangelist review.'
       externalDocs:
         url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
       parameters:
@@ -869,8 +837,7 @@ paths:
       tags:
       - OTA
       summary: Push a firmware image to a device
-      description: Pushes a firmware image to a target device. The payload `value` is the device ID of
-        the target device.
+      description: Pushes a firmware image to a target device. The payload `value` is the device ID of the target device.
       externalDocs:
         url: https://afero-docs.readthedocs.io/en/latest/API-OTAEndpoints-Funcs/
       parameters:
@@ -943,79 +910,7 @@ paths:
       security:
       - bearerAuth: []
 components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      description: 'The OAuth 2.0 access token returned by POST /oauth/token, sent as `Authorization:
-        Bearer <access_token>`. Tokens expire (approximately four hours per the Afero docs).'
   schemas:
-    FirmwareAssociation:
-      type: object
-      properties:
-        name:
-          type: string
-        partnerId:
-          type: string
-        email:
-          type: string
-        deviceTypeId:
-          type: string
-        deviceTypeName:
-          type: string
-        firmwareImageId:
-          type: string
-          description: An integer represented as a string; these values may exceed 53-bit precision.
-    FirmwareTypeCreate:
-      type: object
-      required:
-      - name
-      - type
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        type:
-          type: integer
-          description: Platform firmware types 1-100; MCU firmware types 101-200.
-    Error:
-      type: object
-      description: The Afero Cloud API error envelope, observed live on api.afero.io (2026-08-02).
-      properties:
-        timestamp:
-          type: integer
-          description: Epoch milliseconds the error was produced.
-        status:
-          type: integer
-          description: The HTTP status code.
-        error:
-          type: string
-          description: The short error code, e.g. `unauthorized`.
-        error_description:
-          type: string
-          description: Human readable description of the error.
-        service_name:
-          type: string
-          description: The Afero service that produced the error, e.g. `ClientApi`.
-        region:
-          type: string
-          description: The Afero cloud region, e.g. `us-west-2`.
-    PoolFirmwareImageUpdate:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        version:
-          type: string
-        url:
-          type: string
-        tags:
-          type: array
-          items:
-            type: string
     FirmwareType:
       type: object
       properties:
@@ -1036,8 +931,7 @@ components:
           type: integer
         versionAttributeId:
           type: integer
-          description: The device attribute ID that reports this firmware type's version — the firmware
-            type plus 2000.
+          description: The device attribute ID that reports this firmware type's version — the firmware type plus 2000.
     Value:
       type: object
       required:
@@ -1045,11 +939,37 @@ components:
       properties:
         value:
           type: string
-    BooleanValue:
+    PoolFirmwareImageCreate:
       type: object
+      required:
+      - name
+      - type
+      - version
+      - url
       properties:
-        value:
-          type: boolean
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: integer
+        version:
+          type: string
+          description: The user-friendly version string.
+        url:
+          type: string
+          description: The firmware repository URL of the binary.
+        tags:
+          type: array
+          items:
+            type: string
+        associations:
+          type: object
+          description: Map of partner ID to an array of device type IDs.
+          additionalProperties:
+            type: array
+            items:
+              type: string
     DeviceTypeFirmwareImageCreate:
       type: object
       required:
@@ -1081,6 +1001,73 @@ components:
             type: array
             items:
               type: string
+    FirmwareAssociation:
+      type: object
+      properties:
+        name:
+          type: string
+        partnerId:
+          type: string
+        email:
+          type: string
+        deviceTypeId:
+          type: string
+        deviceTypeName:
+          type: string
+        firmwareImageId:
+          type: string
+          description: An integer represented as a string; these values may exceed 53-bit precision.
+    BooleanValue:
+      type: object
+      properties:
+        value:
+          type: boolean
+    Page:
+      type: object
+      description: The Afero paged result set envelope. Default page size is 50.
+      properties:
+        number:
+          type: integer
+          description: Zero-based index of this page.
+        size:
+          type: integer
+        totalPages:
+          type: integer
+        numberOfElements:
+          type: integer
+        totalElements:
+          type: integer
+        sort:
+          type: string
+    PoolFirmwareImage:
+      type: object
+      properties:
+        id:
+          type: string
+          description: An integer represented as a string; these values may exceed 53-bit precision.
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: integer
+        versionNumber:
+          type: string
+          description: An integer represented as a string; these values may exceed 53-bit precision.
+        version:
+          type: string
+        url:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        createdTimestamp:
+          type: integer
+        updatedTimestamp:
+          type: integer
+        partnerId:
+          type: string
     DeviceTypeFirmwareImage:
       type: object
       properties:
@@ -1117,23 +1104,6 @@ components:
         deviceProfileId:
           type: string
           description: Present on firmware type 4 (DEVICE_DESCRIPTION) records.
-    Page:
-      type: object
-      description: The Afero paged result set envelope. Default page size is 50.
-      properties:
-        number:
-          type: integer
-          description: Zero-based index of this page.
-        size:
-          type: integer
-        totalPages:
-          type: integer
-        numberOfElements:
-          type: integer
-        totalElements:
-          type: integer
-        sort:
-          type: string
     PoolFirmwareImagePage:
       allOf:
       - $ref: '#/components/schemas/Page'
@@ -1161,13 +1131,11 @@ components:
           type: string
         description:
           type: string
-    PoolFirmwareImageCreate:
+    FirmwareTypeCreate:
       type: object
       required:
       - name
       - type
-      - version
-      - url
       properties:
         name:
           type: string
@@ -1175,38 +1143,14 @@ components:
           type: string
         type:
           type: integer
-        version:
-          type: string
-          description: The user-friendly version string.
-        url:
-          type: string
-          description: The firmware repository URL of the binary.
-        tags:
-          type: array
-          items:
-            type: string
-        associations:
-          type: object
-          description: Map of partner ID to an array of device type IDs.
-          additionalProperties:
-            type: array
-            items:
-              type: string
-    PoolFirmwareImage:
+          description: Platform firmware types 1-100; MCU firmware types 101-200.
+    PoolFirmwareImageUpdate:
       type: object
       properties:
-        id:
-          type: string
-          description: An integer represented as a string; these values may exceed 53-bit precision.
         name:
           type: string
         description:
           type: string
-        type:
-          type: integer
-        versionNumber:
-          type: string
-          description: An integer represented as a string; these values may exceed 53-bit precision.
         version:
           type: string
         url:
@@ -1215,12 +1159,28 @@ components:
           type: array
           items:
             type: string
-        createdTimestamp:
+    Error:
+      type: object
+      description: The Afero Cloud API error envelope, observed live on api.afero.io (2026-08-02).
+      properties:
+        timestamp:
           type: integer
-        updatedTimestamp:
+          description: Epoch milliseconds the error was produced.
+        status:
           type: integer
-        partnerId:
+          description: The HTTP status code.
+        error:
           type: string
+          description: The short error code, e.g. `unauthorized`.
+        error_description:
+          type: string
+          description: Human readable description of the error.
+        service_name:
+          type: string
+          description: The Afero service that produced the error, e.g. `ClientApi`.
+        region:
+          type: string
+          description: The Afero cloud region, e.g. `us-west-2`.
   responses:
     Unauthorized:
       description: Full authentication is required to access this resource.
@@ -1235,17 +1195,23 @@ components:
             error_description: Full authentication is required to access this resource
             service_name: ClientApi
             region: us-west-2
-    Forbidden:
-      description: The authenticated principal does not hold the required account or partner privilege.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     NotFound:
       description: The requested resource does not exist.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-security:
-- bearerAuth: []
+    Forbidden:
+      description: The authenticated principal does not hold the required account or partner privilege.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'The OAuth 2.0 access token returned by POST /oauth/token, sent as `Authorization: Bearer <access_token>`. Tokens expire (approximately four hours per the Afero docs).'
+externalDocs:
+  description: Afero Developer Docs
+  url: https://afero-docs.readthedocs.io/en/latest/

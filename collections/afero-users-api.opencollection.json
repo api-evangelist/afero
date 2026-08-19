@@ -1,0 +1,39 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Afero Cloud Users API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Users",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get information about a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.afero.io/v1/users/me",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns user-specific information for the authenticated end-user: the accounts the user can access and the privileges held on each, the sign-in credential, the partner accounts and partner privileges held, and the terms-of-service versions accepted or awaiting acceptance."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

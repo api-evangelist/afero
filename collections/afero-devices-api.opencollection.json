@@ -1,0 +1,154 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Afero Cloud Devices API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Devices",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List current devices and state information",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.afero.io/v1/accounts/:accountId/devices",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path",
+                "description": "The Afero account ID."
+              },
+              {
+                "name": "expansions",
+                "value": "",
+                "type": "query",
+                "description": "Selects the additional information returned for each device. One of `state`, `tags` or `attributes`."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Lists the devices associated with the specified account. The response can be enriched with the `expansions` query parameter to include device state, device tags, or device attributes."
+        },
+        {
+          "info": {
+            "name": "Get a single device and its state information",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.afero.io/v1/accounts/:accountId/devices/:deviceId",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path",
+                "description": "The Afero account ID."
+              },
+              {
+                "name": "deviceId",
+                "value": "",
+                "type": "path",
+                "description": "The Afero device ID."
+              },
+              {
+                "name": "expansions",
+                "value": "",
+                "type": "query",
+                "description": "Selects the additional information returned for each device. One of `state`, `tags` or `attributes`."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns a single device on the specified account. The response can be enriched with the `expansions` query parameter to include device state, device tags, or device attributes."
+        },
+        {
+          "info": {
+            "name": "Execute an action on a device",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.afero.io/v1/accounts/:accountId/devices/:deviceId/actions",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path",
+                "description": "The Afero account ID."
+              },
+              {
+                "name": "deviceId",
+                "value": "",
+                "type": "path",
+                "description": "The Afero device ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Submits an attribute read or write against a device by attribute ID. `data` must be hexadecimal encoded, little endian. Read and write commands are ASYNCHRONOUS: the call may return before the read/write takes place, and if the device is offline the request may never complete."
+        },
+        {
+          "info": {
+            "name": "Update the friendly name of a device",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.afero.io/v1/accounts/:accountId/devices/:deviceId/friendlyName",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path",
+                "description": "The Afero account ID."
+              },
+              {
+                "name": "deviceId",
+                "value": "",
+                "type": "path",
+                "description": "The Afero device ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Changes the friendly name of the specified device. This name is visible in the Afero Profile Editor."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
