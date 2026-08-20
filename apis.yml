@@ -40,6 +40,9 @@ apis:
   baseURL: https://api.afero.io
   tags:
   - Authentication
+  - Security
+  tags_raw:
+  - Authentication
   - OAuth
   - Security
   properties:
@@ -59,6 +62,10 @@ apis:
   humanURL: https://afero-docs.readthedocs.io/en/latest/API-UserEndpoints/
   baseURL: https://api.afero.io
   tags:
+  - User
+  - Account
+  - Identity
+  tags_raw:
   - Users
   - Accounts
   - Identity
