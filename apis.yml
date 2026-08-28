@@ -10,6 +10,18 @@ description: 'Afero, Inc. is a Los Altos, California IoT platform company founde
   firmware pipeline. Afero has raised $73.2M from investors including Samsung Catalyst Fund and Crosspoint
   Capital Partners and reports millions of deployed devices across 200+ product categories in consumer,
   enterprise and industrial markets.'
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://cdn.afero.io/social/afero_logo_114x114.png
 url: https://raw.githubusercontent.com/api-evangelist/afero/refs/heads/main/apis.yml
 x-type: company
