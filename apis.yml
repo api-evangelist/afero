@@ -42,7 +42,21 @@ x-source: harvest:secondary-market
 specificationVersion: '0.23'
 created: '2026-08-02'
 modified: '2026-08-02'
+x-docs-platform: mkdocs
+x-docs-platform-confidence: medium
+x-docs-platform-checked: 2026-09-17
 tags:
+- Company
+- IoT
+- IoT Platform
+- Connected Devices
+- Device Management
+- Firmware
+- Over-the-Air Updates
+- Bluetooth Low Energy
+- Embedded Security
+- Hardware
+tags_raw:
 - Company
 - Internet of Things
 - IoT Platform
@@ -112,6 +126,11 @@ apis:
   humanURL: https://afero-docs.readthedocs.io/en/latest/API-DeviceEndpoints/
   baseURL: https://api.afero.io
   tags:
+  - Devices
+  - Device Management
+  - IoT
+  - Telemetry
+  tags_raw:
   - Devices
   - Device Management
   - Internet of Things
