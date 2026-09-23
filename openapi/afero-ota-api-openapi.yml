@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Afero Cloud Firmware OTA API
+  title: Afero Cloud OTA API
   version: v1
-  description: 'The Afero Cloud API is the RESTful control plane for the Afero IoT platform: it lists the devices and users on an Afero account, reports real-time device state, executes attribute read/write actions against connected devices, and manages the over-the-air (OTA) firmware pipeline — firmware types, firmware pool images, binary upload, device-type associations, firmware tags, and firmware pushes. All requests are made over TLS to https://api.afero.io and are authenticated with an OAuth 2.0 bearer access token obtained from the /oauth/token endpoint using the partner OAuth Client ID and Client Secret issued in the Afero Profile Editor. This OpenAPI was DERIVED by API Evangelist from Afero''s public developer documentation (resource URLs, HTTP methods, request headers, request payload model schemas, response model schemas and examples transcribed verbatim from the docs); it is NOT a provider-published specification. Afero publishes no machine-readable spec: https://api.afero.io/api-docs and https://api.afero.io/v1/openapi.json both answer HTTP 401 (authenticated access required), probed 2026-08-02.'
+  description: 'The Afero Cloud API is the RESTful control plane for the Afero IoT platform: it lists the devices and users on an Afero account, reports real-time device state, executes attribute read/write actions against connected devices, and manages the over-the-air (OTA) firmware pipeline — firmware types, firmware pool images, binary upload, device-type associations, firmware tags, and firmware pushes.'
   contact:
     name: Afero Developer Documentation
     url: https://afero-docs.readthedocs.io/en/latest/CloudAPIs/
@@ -13,7 +13,6 @@ info:
   x-apievangelist-derived-from: https://afero-docs.readthedocs.io/en/latest/CloudAPIs/
   x-apievangelist-derived-on: '2026-08-02'
   x-apievangelist-provider-published: false
-  x-apievangelist-split-from: openapi/_original/afero-cloud-api-openapi.yml
 servers:
 - url: https://api.afero.io
   description: Afero Cloud API production base URL
@@ -911,65 +910,11 @@ paths:
       - bearerAuth: []
 components:
   schemas:
-    FirmwareType:
+    BooleanValue:
       type: object
-      properties:
-        id:
-          type: string
-          description: An integer represented as a string; these values may exceed 53-bit precision.
-        name:
-          type: string
-        description:
-          type: string
-        type:
-          type: integer
-        partnerId:
-          type: string
-        createdTimestamp:
-          type: integer
-        updatedTimestamp:
-          type: integer
-        versionAttributeId:
-          type: integer
-          description: The device attribute ID that reports this firmware type's version — the firmware type plus 2000.
-    Value:
-      type: object
-      required:
-      - value
       properties:
         value:
-          type: string
-    PoolFirmwareImageCreate:
-      type: object
-      required:
-      - name
-      - type
-      - version
-      - url
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        type:
-          type: integer
-        version:
-          type: string
-          description: The user-friendly version string.
-        url:
-          type: string
-          description: The firmware repository URL of the binary.
-        tags:
-          type: array
-          items:
-            type: string
-        associations:
-          type: object
-          description: Map of partner ID to an array of device type IDs.
-          additionalProperties:
-            type: array
-            items:
-              type: string
+          type: boolean
     DeviceTypeFirmwareImageCreate:
       type: object
       required:
@@ -1001,43 +946,12 @@ components:
             type: array
             items:
               type: string
-    FirmwareAssociation:
+    Value:
       type: object
-      properties:
-        name:
-          type: string
-        partnerId:
-          type: string
-        email:
-          type: string
-        deviceTypeId:
-          type: string
-        deviceTypeName:
-          type: string
-        firmwareImageId:
-          type: string
-          description: An integer represented as a string; these values may exceed 53-bit precision.
-    BooleanValue:
-      type: object
+      required:
+      - value
       properties:
         value:
-          type: boolean
-    Page:
-      type: object
-      description: The Afero paged result set envelope. Default page size is 50.
-      properties:
-        number:
-          type: integer
-          description: Zero-based index of this page.
-        size:
-          type: integer
-        totalPages:
-          type: integer
-        numberOfElements:
-          type: integer
-        totalElements:
-          type: integer
-        sort:
           type: string
     PoolFirmwareImage:
       type: object
@@ -1104,6 +1018,115 @@ components:
         deviceProfileId:
           type: string
           description: Present on firmware type 4 (DEVICE_DESCRIPTION) records.
+    PoolFirmwareImageCreate:
+      type: object
+      required:
+      - name
+      - type
+      - version
+      - url
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: integer
+        version:
+          type: string
+          description: The user-friendly version string.
+        url:
+          type: string
+          description: The firmware repository URL of the binary.
+        tags:
+          type: array
+          items:
+            type: string
+        associations:
+          type: object
+          description: Map of partner ID to an array of device type IDs.
+          additionalProperties:
+            type: array
+            items:
+              type: string
+    Page:
+      type: object
+      description: The Afero paged result set envelope. Default page size is 50.
+      properties:
+        number:
+          type: integer
+          description: Zero-based index of this page.
+        size:
+          type: integer
+        totalPages:
+          type: integer
+        numberOfElements:
+          type: integer
+        totalElements:
+          type: integer
+        sort:
+          type: string
+    FirmwareAssociation:
+      type: object
+      properties:
+        name:
+          type: string
+        partnerId:
+          type: string
+        email:
+          type: string
+        deviceTypeId:
+          type: string
+        deviceTypeName:
+          type: string
+        firmwareImageId:
+          type: string
+          description: An integer represented as a string; these values may exceed 53-bit precision.
+    FirmwareType:
+      type: object
+      properties:
+        id:
+          type: string
+          description: An integer represented as a string; these values may exceed 53-bit precision.
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: integer
+        partnerId:
+          type: string
+        createdTimestamp:
+          type: integer
+        updatedTimestamp:
+          type: integer
+        versionAttributeId:
+          type: integer
+          description: The device attribute ID that reports this firmware type's version — the firmware type plus 2000.
+    PoolFirmwareImageUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        version:
+          type: string
+        url:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+    FirmwareTypeUpdate:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+        description:
+          type: string
     PoolFirmwareImagePage:
       allOf:
       - $ref: '#/components/schemas/Page'
@@ -1122,43 +1145,6 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/DeviceTypeFirmwareImage'
-    FirmwareTypeUpdate:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-    FirmwareTypeCreate:
-      type: object
-      required:
-      - name
-      - type
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        type:
-          type: integer
-          description: Platform firmware types 1-100; MCU firmware types 101-200.
-    PoolFirmwareImageUpdate:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        version:
-          type: string
-        url:
-          type: string
-        tags:
-          type: array
-          items:
-            type: string
     Error:
       type: object
       description: The Afero Cloud API error envelope, observed live on api.afero.io (2026-08-02).
@@ -1181,7 +1167,32 @@ components:
         region:
           type: string
           description: The Afero cloud region, e.g. `us-west-2`.
+    FirmwareTypeCreate:
+      type: object
+      required:
+      - name
+      - type
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: integer
+          description: Platform firmware types 1-100; MCU firmware types 101-200.
   responses:
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: The authenticated principal does not hold the required account or partner privilege.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: Full authentication is required to access this resource.
       content:
@@ -1195,23 +1206,15 @@ components:
             error_description: Full authentication is required to access this resource
             service_name: ClientApi
             region: us-west-2
-    NotFound:
-      description: The requested resource does not exist.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: The authenticated principal does not hold the required account or partner privilege.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       description: 'The OAuth 2.0 access token returned by POST /oauth/token, sent as `Authorization: Bearer <access_token>`. Tokens expire (approximately four hours per the Afero docs).'
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic with the partner OAuth Client ID as username and OAuth Client Secret as password, used only on POST /oauth/token.
 externalDocs:
   description: Afero Developer Docs
   url: https://afero-docs.readthedocs.io/en/latest/

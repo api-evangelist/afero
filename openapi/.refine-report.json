@@ -1,10 +1,7 @@
 {
   "provider": "afero",
   "sources": [
-    "afero-authentication-api-openapi.yml",
-    "afero-devices-api-openapi.yml",
-    "afero-ota-api-openapi.yml",
-    "afero-users-api-openapi.yml"
+    "_original/afero-cloud-api-openapi.yml"
   ],
   "outputs": [
     "afero-authentication-api-openapi.yml",
@@ -16,11 +13,14 @@
   "errors": [],
   "warnings": [],
   "notes": [
-    "afero-authentication-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "afero-devices-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "afero-ota-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "afero-users-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "afero-cloud-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
     "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "afero-authentication-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "afero-devices-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "afero-ota-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "afero-users-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
