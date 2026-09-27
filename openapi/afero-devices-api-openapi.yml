@@ -214,39 +214,6 @@ paths:
       - bearerAuth: []
 components:
   schemas:
-    DeviceState:
-      type: object
-      description: Returned when the `state` expansion is requested.
-      properties:
-        available:
-          type: boolean
-        visible:
-          type: boolean
-        dirty:
-          type: boolean
-        rebooted:
-          type: boolean
-        connectable:
-          type: boolean
-        connected:
-          type: boolean
-        linked:
-          type: boolean
-        rssi:
-          type: integer
-        updatedTimestamp:
-          type: integer
-        location:
-          $ref: '#/components/schemas/DeviceLocation'
-    DeviceLocation:
-      type: object
-      properties:
-        latitude:
-          type: string
-        longitude:
-          type: string
-        lastUpdatedTimestamp:
-          type: integer
     DeviceActionResult:
       type: object
       properties:
@@ -261,31 +228,6 @@ components:
           description: The Afero service that accepted the request, e.g. `ClientApi`.
         source:
           $ref: '#/components/schemas/ActionSource'
-    DeviceTag:
-      type: object
-      description: Returned when the `tags` expansion is requested.
-      properties:
-        deviceTagId:
-          type: string
-        deviceTagType:
-          type: string
-          description: e.g. `SYSTEM`.
-        value:
-          type: string
-        localizationKey:
-          type: string
-    DeviceAttribute:
-      type: object
-      description: Returned when the `attributes` expansion is requested.
-      properties:
-        id:
-          type: integer
-          description: The device attribute ID.
-        data:
-          type: string
-          description: Hexadecimal encoded, little endian attribute value.
-        updatedTimestamp:
-          type: integer
     FriendlyName:
       type: object
       required:
@@ -305,24 +247,6 @@ components:
           type: string
         lastName:
           type: string
-    DeviceAction:
-      type: object
-      required:
-      - type
-      - attrId
-      properties:
-        type:
-          type: string
-          enum:
-          - attribute_read
-          - attribute_write
-          description: The action to perform. The attribute must support the operation.
-        attrId:
-          type: integer
-          description: The device attribute ID to read or write.
-        data:
-          type: string
-          description: Hexadecimal encoded, little endian value to write.
     Error:
       type: object
       description: The Afero Cloud API error envelope, observed live on api.afero.io (2026-08-02).
@@ -345,6 +269,24 @@ components:
         region:
           type: string
           description: The Afero cloud region, e.g. `us-west-2`.
+    DeviceAction:
+      type: object
+      required:
+      - type
+      - attrId
+      properties:
+        type:
+          type: string
+          enum:
+          - attribute_read
+          - attribute_write
+          description: The action to perform. The attribute must support the operation.
+        attrId:
+          type: integer
+          description: The device attribute ID to read or write.
+        data:
+          type: string
+          description: Hexadecimal encoded, little endian value to write.
     Device:
       type: object
       properties:
@@ -380,19 +322,65 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DeviceAttribute'
+    DeviceAttribute:
+      type: object
+      description: Returned when the `attributes` expansion is requested.
+      properties:
+        id:
+          type: integer
+          description: The device attribute ID.
+        data:
+          type: string
+          description: Hexadecimal encoded, little endian attribute value.
+        updatedTimestamp:
+          type: integer
+    DeviceTag:
+      type: object
+      description: Returned when the `tags` expansion is requested.
+      properties:
+        deviceTagId:
+          type: string
+        deviceTagType:
+          type: string
+          description: e.g. `SYSTEM`.
+        value:
+          type: string
+        localizationKey:
+          type: string
+    DeviceLocation:
+      type: object
+      properties:
+        latitude:
+          type: string
+        longitude:
+          type: string
+        lastUpdatedTimestamp:
+          type: integer
+    DeviceState:
+      type: object
+      description: Returned when the `state` expansion is requested.
+      properties:
+        available:
+          type: boolean
+        visible:
+          type: boolean
+        dirty:
+          type: boolean
+        rebooted:
+          type: boolean
+        connectable:
+          type: boolean
+        connected:
+          type: boolean
+        linked:
+          type: boolean
+        rssi:
+          type: integer
+        updatedTimestamp:
+          type: integer
+        location:
+          $ref: '#/components/schemas/DeviceLocation'
   responses:
-    NotFound:
-      description: The requested resource does not exist.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: The authenticated principal does not hold the required account or partner privilege.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: Full authentication is required to access this resource.
       content:
@@ -406,6 +394,18 @@ components:
             error_description: Full authentication is required to access this resource
             service_name: ClientApi
             region: us-west-2
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: The authenticated principal does not hold the required account or partner privilege.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

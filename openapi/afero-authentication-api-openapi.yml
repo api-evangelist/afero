@@ -79,21 +79,6 @@ components:
         region:
           type: string
           description: The Afero cloud region, e.g. `us-west-2`.
-    AccessToken:
-      type: object
-      properties:
-        access_token:
-          type: string
-          description: The bearer access token.
-        token_type:
-          type: string
-          description: The token type; `bearer`.
-        expires_in:
-          type: integer
-          description: Seconds until the token expires.
-        scope:
-          type: string
-          description: Space-delimited granted scopes, e.g. `partner account`.
     TokenRequest:
       type: object
       required:
@@ -113,6 +98,21 @@ components:
           enum:
           - password
           description: The OAuth 2.0 grant type.
+    AccessToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: The bearer access token.
+        token_type:
+          type: string
+          description: The token type; `bearer`.
+        expires_in:
+          type: integer
+          description: Seconds until the token expires.
+        scope:
+          type: string
+          description: Space-delimited granted scopes, e.g. `partner account`.
   responses:
     Unauthorized:
       description: Full authentication is required to access this resource.

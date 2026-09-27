@@ -910,11 +910,6 @@ paths:
       - bearerAuth: []
 components:
   schemas:
-    BooleanValue:
-      type: object
-      properties:
-        value:
-          type: boolean
     DeviceTypeFirmwareImageCreate:
       type: object
       required:
@@ -946,13 +941,6 @@ components:
             type: array
             items:
               type: string
-    Value:
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: string
     PoolFirmwareImage:
       type: object
       properties:
@@ -982,42 +970,32 @@ components:
           type: integer
         partnerId:
           type: string
-    DeviceTypeFirmwareImage:
+    FirmwareType:
       type: object
       properties:
         id:
           type: string
+          description: An integer represented as a string; these values may exceed 53-bit precision.
         name:
           type: string
         description:
           type: string
         type:
           type: integer
-        versionNumber:
+        partnerId:
           type: string
-          description: An integer represented as a string; these values may exceed 53-bit precision.
-        version:
-          type: string
-        url:
-          type: string
-        tags:
-          type: array
-          items:
-            type: string
         createdTimestamp:
           type: integer
         updatedTimestamp:
           type: integer
-        partnerId:
-          type: string
-        deviceTypeId:
-          type: string
-        deviceDescriptionId:
-          type: string
-          description: Present on firmware type 4 (DEVICE_DESCRIPTION) records.
-        deviceProfileId:
-          type: string
-          description: Present on firmware type 4 (DEVICE_DESCRIPTION) records.
+        versionAttributeId:
+          type: integer
+          description: The device attribute ID that reports this firmware type's version — the firmware type plus 2000.
+    BooleanValue:
+      type: object
+      properties:
+        value:
+          type: boolean
     PoolFirmwareImageCreate:
       type: object
       required:
@@ -1066,85 +1044,6 @@ components:
           type: integer
         sort:
           type: string
-    FirmwareAssociation:
-      type: object
-      properties:
-        name:
-          type: string
-        partnerId:
-          type: string
-        email:
-          type: string
-        deviceTypeId:
-          type: string
-        deviceTypeName:
-          type: string
-        firmwareImageId:
-          type: string
-          description: An integer represented as a string; these values may exceed 53-bit precision.
-    FirmwareType:
-      type: object
-      properties:
-        id:
-          type: string
-          description: An integer represented as a string; these values may exceed 53-bit precision.
-        name:
-          type: string
-        description:
-          type: string
-        type:
-          type: integer
-        partnerId:
-          type: string
-        createdTimestamp:
-          type: integer
-        updatedTimestamp:
-          type: integer
-        versionAttributeId:
-          type: integer
-          description: The device attribute ID that reports this firmware type's version — the firmware type plus 2000.
-    PoolFirmwareImageUpdate:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        version:
-          type: string
-        url:
-          type: string
-        tags:
-          type: array
-          items:
-            type: string
-    FirmwareTypeUpdate:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-    PoolFirmwareImagePage:
-      allOf:
-      - $ref: '#/components/schemas/Page'
-      - type: object
-        properties:
-          content:
-            type: array
-            items:
-              $ref: '#/components/schemas/PoolFirmwareImage'
-    DeviceTypeFirmwareImagePage:
-      allOf:
-      - $ref: '#/components/schemas/Page'
-      - type: object
-        properties:
-          content:
-            type: array
-            items:
-              $ref: '#/components/schemas/DeviceTypeFirmwareImage'
     Error:
       type: object
       description: The Afero Cloud API error envelope, observed live on api.afero.io (2026-08-02).
@@ -1180,13 +1079,108 @@ components:
         type:
           type: integer
           description: Platform firmware types 1-100; MCU firmware types 101-200.
+    Value:
+      type: object
+      required:
+      - value
+      properties:
+        value:
+          type: string
+    DeviceTypeFirmwareImagePage:
+      allOf:
+      - $ref: '#/components/schemas/Page'
+      - type: object
+        properties:
+          content:
+            type: array
+            items:
+              $ref: '#/components/schemas/DeviceTypeFirmwareImage'
+    FirmwareAssociation:
+      type: object
+      properties:
+        name:
+          type: string
+        partnerId:
+          type: string
+        email:
+          type: string
+        deviceTypeId:
+          type: string
+        deviceTypeName:
+          type: string
+        firmwareImageId:
+          type: string
+          description: An integer represented as a string; these values may exceed 53-bit precision.
+    FirmwareTypeUpdate:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+    DeviceTypeFirmwareImage:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: integer
+        versionNumber:
+          type: string
+          description: An integer represented as a string; these values may exceed 53-bit precision.
+        version:
+          type: string
+        url:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        createdTimestamp:
+          type: integer
+        updatedTimestamp:
+          type: integer
+        partnerId:
+          type: string
+        deviceTypeId:
+          type: string
+        deviceDescriptionId:
+          type: string
+          description: Present on firmware type 4 (DEVICE_DESCRIPTION) records.
+        deviceProfileId:
+          type: string
+          description: Present on firmware type 4 (DEVICE_DESCRIPTION) records.
+    PoolFirmwareImageUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        version:
+          type: string
+        url:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+    PoolFirmwareImagePage:
+      allOf:
+      - $ref: '#/components/schemas/Page'
+      - type: object
+        properties:
+          content:
+            type: array
+            items:
+              $ref: '#/components/schemas/PoolFirmwareImage'
   responses:
-    NotFound:
-      description: The requested resource does not exist.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     Forbidden:
       description: The authenticated principal does not hold the required account or partner privilege.
       content:
@@ -1206,6 +1200,12 @@ components:
             error_description: Full authentication is required to access this resource
             service_name: ClientApi
             region: us-west-2
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http
