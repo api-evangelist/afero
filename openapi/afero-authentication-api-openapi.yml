@@ -56,7 +56,36 @@ paths:
       security:
       - basicAuth: []
 components:
+  responses:
+    Unauthorized:
+      description: Full authentication is required to access this resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            timestamp: 1785679681261
+            status: 401
+            error: unauthorized
+            error_description: Full authentication is required to access this resource
+            service_name: ClientApi
+            region: us-west-2
   schemas:
+    AccessToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: The bearer access token.
+        token_type:
+          type: string
+          description: The token type; `bearer`.
+        expires_in:
+          type: integer
+          description: Seconds until the token expires.
+        scope:
+          type: string
+          description: Space-delimited granted scopes, e.g. `partner account`.
     Error:
       type: object
       description: The Afero Cloud API error envelope, observed live on api.afero.io (2026-08-02).
@@ -98,35 +127,6 @@ components:
           enum:
           - password
           description: The OAuth 2.0 grant type.
-    AccessToken:
-      type: object
-      properties:
-        access_token:
-          type: string
-          description: The bearer access token.
-        token_type:
-          type: string
-          description: The token type; `bearer`.
-        expires_in:
-          type: integer
-          description: Seconds until the token expires.
-        scope:
-          type: string
-          description: Space-delimited granted scopes, e.g. `partner account`.
-  responses:
-    Unauthorized:
-      description: Full authentication is required to access this resource.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            timestamp: 1785679681261
-            status: 401
-            error: unauthorized
-            error_description: Full authentication is required to access this resource
-            service_name: ClientApi
-            region: us-west-2
   securitySchemes:
     bearerAuth:
       type: http

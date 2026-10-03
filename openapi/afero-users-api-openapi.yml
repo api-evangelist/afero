@@ -46,33 +46,21 @@ paths:
       - bearerAuth: []
 components:
   schemas:
-    Account:
+    Credential:
       type: object
       properties:
-        accountId:
+        credentialId:
           type: string
-        createdTimestamp:
+          description: The sign-in credential, e.g. an email address.
+        failedAttempts:
           type: integer
-        description:
-          type: string
+        lastUsedTimestamp:
+          type: integer
         type:
           type: string
-          description: The account type, e.g. `CUSTOMER`.
-    TermsOfService:
-      type: object
-      properties:
-        tosType:
-          type: string
-          description: 'The terms type: `user`, `developer` or `general`.'
-        currentVersion:
-          type: integer
-        userVersion:
-          type: integer
-        needsAcceptance:
+          description: The credential type, e.g. `EMAIL`.
+        verified:
           type: boolean
-        url:
-          type: string
-          format: uri
     Partner:
       type: object
       properties:
@@ -88,6 +76,55 @@ components:
           description: The partner OAuth Client Secret.
         createdTimestamp:
           type: integer
+    Error:
+      type: object
+      description: The Afero Cloud API error envelope, observed live on api.afero.io (2026-08-02).
+      properties:
+        timestamp:
+          type: integer
+          description: Epoch milliseconds the error was produced.
+        status:
+          type: integer
+          description: The HTTP status code.
+        error:
+          type: string
+          description: The short error code, e.g. `unauthorized`.
+        error_description:
+          type: string
+          description: Human readable description of the error.
+        service_name:
+          type: string
+          description: The Afero service that produced the error, e.g. `ClientApi`.
+        region:
+          type: string
+          description: The Afero cloud region, e.g. `us-west-2`.
+    TermsOfService:
+      type: object
+      properties:
+        tosType:
+          type: string
+          description: 'The terms type: `user`, `developer` or `general`.'
+        currentVersion:
+          type: integer
+        userVersion:
+          type: integer
+        needsAcceptance:
+          type: boolean
+        url:
+          type: string
+          format: uri
+    AccountAccess:
+      type: object
+      properties:
+        account:
+          $ref: '#/components/schemas/Account'
+        privileges:
+          type: object
+          properties:
+            canWrite:
+              type: boolean
+            owner:
+              type: boolean
     User:
       type: object
       properties:
@@ -111,28 +148,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TermsOfService'
-    Error:
-      type: object
-      description: The Afero Cloud API error envelope, observed live on api.afero.io (2026-08-02).
-      properties:
-        timestamp:
-          type: integer
-          description: Epoch milliseconds the error was produced.
-        status:
-          type: integer
-          description: The HTTP status code.
-        error:
-          type: string
-          description: The short error code, e.g. `unauthorized`.
-        error_description:
-          type: string
-          description: Human readable description of the error.
-        service_name:
-          type: string
-          description: The Afero service that produced the error, e.g. `ClientApi`.
-        region:
-          type: string
-          description: The Afero cloud region, e.g. `us-west-2`.
     PartnerAccess:
       type: object
       properties:
@@ -149,33 +164,18 @@ components:
               type: boolean
             viewDeviceInfo:
               type: boolean
-    Credential:
+    Account:
       type: object
       properties:
-        credentialId:
+        accountId:
           type: string
-          description: The sign-in credential, e.g. an email address.
-        failedAttempts:
+        createdTimestamp:
           type: integer
-        lastUsedTimestamp:
-          type: integer
+        description:
+          type: string
         type:
           type: string
-          description: The credential type, e.g. `EMAIL`.
-        verified:
-          type: boolean
-    AccountAccess:
-      type: object
-      properties:
-        account:
-          $ref: '#/components/schemas/Account'
-        privileges:
-          type: object
-          properties:
-            canWrite:
-              type: boolean
-            owner:
-              type: boolean
+          description: The account type, e.g. `CUSTOMER`.
   responses:
     Unauthorized:
       description: Full authentication is required to access this resource.
