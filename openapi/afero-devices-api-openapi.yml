@@ -214,18 +214,6 @@ paths:
       - bearerAuth: []
 components:
   schemas:
-    DeviceAttribute:
-      type: object
-      description: Returned when the `attributes` expansion is requested.
-      properties:
-        id:
-          type: integer
-          description: The device attribute ID.
-        data:
-          type: string
-          description: Hexadecimal encoded, little endian attribute value.
-        updatedTimestamp:
-          type: integer
     DeviceState:
       type: object
       description: Returned when the `state` expansion is requested.
@@ -250,62 +238,6 @@ components:
           type: integer
         location:
           $ref: '#/components/schemas/DeviceLocation'
-    DeviceLocation:
-      type: object
-      properties:
-        latitude:
-          type: string
-        longitude:
-          type: string
-        lastUpdatedTimestamp:
-          type: integer
-    DeviceTag:
-      type: object
-      description: Returned when the `tags` expansion is requested.
-      properties:
-        deviceTagId:
-          type: string
-        deviceTagType:
-          type: string
-          description: e.g. `SYSTEM`.
-        value:
-          type: string
-        localizationKey:
-          type: string
-    Error:
-      type: object
-      description: The Afero Cloud API error envelope, observed live on api.afero.io (2026-08-02).
-      properties:
-        timestamp:
-          type: integer
-          description: Epoch milliseconds the error was produced.
-        status:
-          type: integer
-          description: The HTTP status code.
-        error:
-          type: string
-          description: The short error code, e.g. `unauthorized`.
-        error_description:
-          type: string
-          description: Human readable description of the error.
-        service_name:
-          type: string
-          description: The Afero service that produced the error, e.g. `ClientApi`.
-        region:
-          type: string
-          description: The Afero cloud region, e.g. `us-west-2`.
-    ActionSource:
-      type: object
-      properties:
-        type:
-          type: string
-          description: e.g. `user`.
-        userId:
-          type: string
-        firstName:
-          type: string
-        lastName:
-          type: string
     DeviceActionResult:
       type: object
       properties:
@@ -320,12 +252,18 @@ components:
           description: The Afero service that accepted the request, e.g. `ClientApi`.
         source:
           $ref: '#/components/schemas/ActionSource'
-    FriendlyName:
+    DeviceTag:
       type: object
-      required:
-      - friendlyName
+      description: Returned when the `tags` expansion is requested.
       properties:
-        friendlyName:
+        deviceTagId:
+          type: string
+        deviceTagType:
+          type: string
+          description: e.g. `SYSTEM`.
+        value:
+          type: string
+        localizationKey:
           type: string
     Device:
       type: object
@@ -362,6 +300,61 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DeviceAttribute'
+    ActionSource:
+      type: object
+      properties:
+        type:
+          type: string
+          description: e.g. `user`.
+        userId:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+    Error:
+      type: object
+      description: The Afero Cloud API error envelope, observed live on api.afero.io (2026-08-02).
+      properties:
+        timestamp:
+          type: integer
+          description: Epoch milliseconds the error was produced.
+        status:
+          type: integer
+          description: The HTTP status code.
+        error:
+          type: string
+          description: The short error code, e.g. `unauthorized`.
+        error_description:
+          type: string
+          description: Human readable description of the error.
+        service_name:
+          type: string
+          description: The Afero service that produced the error, e.g. `ClientApi`.
+        region:
+          type: string
+          description: The Afero cloud region, e.g. `us-west-2`.
+    DeviceAttribute:
+      type: object
+      description: Returned when the `attributes` expansion is requested.
+      properties:
+        id:
+          type: integer
+          description: The device attribute ID.
+        data:
+          type: string
+          description: Hexadecimal encoded, little endian attribute value.
+        updatedTimestamp:
+          type: integer
+    DeviceLocation:
+      type: object
+      properties:
+        latitude:
+          type: string
+        longitude:
+          type: string
+        lastUpdatedTimestamp:
+          type: integer
     DeviceAction:
       type: object
       required:
@@ -380,6 +373,13 @@ components:
         data:
           type: string
           description: Hexadecimal encoded, little endian value to write.
+    FriendlyName:
+      type: object
+      required:
+      - friendlyName
+      properties:
+        friendlyName:
+          type: string
   responses:
     Forbidden:
       description: The authenticated principal does not hold the required account or partner privilege.
