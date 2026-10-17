@@ -46,33 +46,22 @@ paths:
       - bearerAuth: []
 components:
   schemas:
-    TermsOfService:
+    PartnerAccess:
       type: object
       properties:
-        tosType:
-          type: string
-          description: 'The terms type: `user`, `developer` or `general`.'
-        currentVersion:
-          type: integer
-        userVersion:
-          type: integer
-        needsAcceptance:
-          type: boolean
-        url:
-          type: string
-          format: uri
-    Account:
-      type: object
-      properties:
-        accountId:
-          type: string
-        createdTimestamp:
-          type: integer
-        description:
-          type: string
-        type:
-          type: string
-          description: The account type, e.g. `CUSTOMER`.
+        partner:
+          $ref: '#/components/schemas/Partner'
+        privileges:
+          type: object
+          properties:
+            inviteUsers:
+              type: boolean
+            manageDeviceProfiles:
+              type: boolean
+            owner:
+              type: boolean
+            viewDeviceInfo:
+              type: boolean
     User:
       type: object
       properties:
@@ -96,6 +85,33 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TermsOfService'
+    Credential:
+      type: object
+      properties:
+        credentialId:
+          type: string
+          description: The sign-in credential, e.g. an email address.
+        failedAttempts:
+          type: integer
+        lastUsedTimestamp:
+          type: integer
+        type:
+          type: string
+          description: The credential type, e.g. `EMAIL`.
+        verified:
+          type: boolean
+    Account:
+      type: object
+      properties:
+        accountId:
+          type: string
+        createdTimestamp:
+          type: integer
+        description:
+          type: string
+        type:
+          type: string
+          description: The account type, e.g. `CUSTOMER`.
     Error:
       type: object
       description: The Afero Cloud API error envelope, observed live on api.afero.io (2026-08-02).
@@ -133,21 +149,21 @@ components:
           description: The partner OAuth Client Secret.
         createdTimestamp:
           type: integer
-    Credential:
+    TermsOfService:
       type: object
       properties:
-        credentialId:
+        tosType:
           type: string
-          description: The sign-in credential, e.g. an email address.
-        failedAttempts:
+          description: 'The terms type: `user`, `developer` or `general`.'
+        currentVersion:
           type: integer
-        lastUsedTimestamp:
+        userVersion:
           type: integer
-        type:
-          type: string
-          description: The credential type, e.g. `EMAIL`.
-        verified:
+        needsAcceptance:
           type: boolean
+        url:
+          type: string
+          format: uri
     AccountAccess:
       type: object
       properties:
@@ -159,22 +175,6 @@ components:
             canWrite:
               type: boolean
             owner:
-              type: boolean
-    PartnerAccess:
-      type: object
-      properties:
-        partner:
-          $ref: '#/components/schemas/Partner'
-        privileges:
-          type: object
-          properties:
-            inviteUsers:
-              type: boolean
-            manageDeviceProfiles:
-              type: boolean
-            owner:
-              type: boolean
-            viewDeviceInfo:
               type: boolean
   responses:
     Unauthorized:

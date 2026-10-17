@@ -910,120 +910,6 @@ paths:
       - bearerAuth: []
 components:
   schemas:
-    PoolFirmwareImagePage:
-      allOf:
-      - $ref: '#/components/schemas/Page'
-      - type: object
-        properties:
-          content:
-            type: array
-            items:
-              $ref: '#/components/schemas/PoolFirmwareImage'
-    PoolFirmwareImageUpdate:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        version:
-          type: string
-        url:
-          type: string
-        tags:
-          type: array
-          items:
-            type: string
-    FirmwareAssociation:
-      type: object
-      properties:
-        name:
-          type: string
-        partnerId:
-          type: string
-        email:
-          type: string
-        deviceTypeId:
-          type: string
-        deviceTypeName:
-          type: string
-        firmwareImageId:
-          type: string
-          description: An integer represented as a string; these values may exceed 53-bit precision.
-    Page:
-      type: object
-      description: The Afero paged result set envelope. Default page size is 50.
-      properties:
-        number:
-          type: integer
-          description: Zero-based index of this page.
-        size:
-          type: integer
-        totalPages:
-          type: integer
-        numberOfElements:
-          type: integer
-        totalElements:
-          type: integer
-        sort:
-          type: string
-    DeviceTypeFirmwareImageCreate:
-      type: object
-      required:
-      - name
-      - type
-      - versionNumber
-      - version
-      - url
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        type:
-          type: integer
-        versionNumber:
-          type: string
-        version:
-          type: string
-        url:
-          type: string
-        tags:
-          type: array
-          items:
-            type: string
-        associations:
-          type: object
-          additionalProperties:
-            type: array
-            items:
-              type: string
-    BooleanValue:
-      type: object
-      properties:
-        value:
-          type: boolean
-    FirmwareType:
-      type: object
-      properties:
-        id:
-          type: string
-          description: An integer represented as a string; these values may exceed 53-bit precision.
-        name:
-          type: string
-        description:
-          type: string
-        type:
-          type: integer
-        partnerId:
-          type: string
-        createdTimestamp:
-          type: integer
-        updatedTimestamp:
-          type: integer
-        versionAttributeId:
-          type: integer
-          description: The device attribute ID that reports this firmware type's version — the firmware type plus 2000.
     FirmwareTypeCreate:
       type: object
       required:
@@ -1037,37 +923,6 @@ components:
         type:
           type: integer
           description: Platform firmware types 1-100; MCU firmware types 101-200.
-    Error:
-      type: object
-      description: The Afero Cloud API error envelope, observed live on api.afero.io (2026-08-02).
-      properties:
-        timestamp:
-          type: integer
-          description: Epoch milliseconds the error was produced.
-        status:
-          type: integer
-          description: The HTTP status code.
-        error:
-          type: string
-          description: The short error code, e.g. `unauthorized`.
-        error_description:
-          type: string
-          description: Human readable description of the error.
-        service_name:
-          type: string
-          description: The Afero service that produced the error, e.g. `ClientApi`.
-        region:
-          type: string
-          description: The Afero cloud region, e.g. `us-west-2`.
-    FirmwareTypeUpdate:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-        description:
-          type: string
     PoolFirmwareImage:
       type: object
       properties:
@@ -1097,6 +952,21 @@ components:
           type: integer
         partnerId:
           type: string
+    PoolFirmwareImageUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        version:
+          type: string
+        url:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
     PoolFirmwareImageCreate:
       type: object
       required:
@@ -1128,6 +998,15 @@ components:
             type: array
             items:
               type: string
+    FirmwareTypeUpdate:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+        description:
+          type: string
     Value:
       type: object
       required:
@@ -1135,6 +1014,54 @@ components:
       properties:
         value:
           type: string
+    Page:
+      type: object
+      description: The Afero paged result set envelope. Default page size is 50.
+      properties:
+        number:
+          type: integer
+          description: Zero-based index of this page.
+        size:
+          type: integer
+        totalPages:
+          type: integer
+        numberOfElements:
+          type: integer
+        totalElements:
+          type: integer
+        sort:
+          type: string
+    Error:
+      type: object
+      description: The Afero Cloud API error envelope, observed live on api.afero.io (2026-08-02).
+      properties:
+        timestamp:
+          type: integer
+          description: Epoch milliseconds the error was produced.
+        status:
+          type: integer
+          description: The HTTP status code.
+        error:
+          type: string
+          description: The short error code, e.g. `unauthorized`.
+        error_description:
+          type: string
+          description: Human readable description of the error.
+        service_name:
+          type: string
+          description: The Afero service that produced the error, e.g. `ClientApi`.
+        region:
+          type: string
+          description: The Afero cloud region, e.g. `us-west-2`.
+    PoolFirmwareImagePage:
+      allOf:
+      - $ref: '#/components/schemas/Page'
+      - type: object
+        properties:
+          content:
+            type: array
+            items:
+              $ref: '#/components/schemas/PoolFirmwareImage'
     DeviceTypeFirmwareImagePage:
       allOf:
       - $ref: '#/components/schemas/Page'
@@ -1144,6 +1071,32 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/DeviceTypeFirmwareImage'
+    FirmwareType:
+      type: object
+      properties:
+        id:
+          type: string
+          description: An integer represented as a string; these values may exceed 53-bit precision.
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: integer
+        partnerId:
+          type: string
+        createdTimestamp:
+          type: integer
+        updatedTimestamp:
+          type: integer
+        versionAttributeId:
+          type: integer
+          description: The device attribute ID that reports this firmware type's version — the firmware type plus 2000.
+    BooleanValue:
+      type: object
+      properties:
+        value:
+          type: boolean
     DeviceTypeFirmwareImage:
       type: object
       properties:
@@ -1180,9 +1133,62 @@ components:
         deviceProfileId:
           type: string
           description: Present on firmware type 4 (DEVICE_DESCRIPTION) records.
+    DeviceTypeFirmwareImageCreate:
+      type: object
+      required:
+      - name
+      - type
+      - versionNumber
+      - version
+      - url
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: integer
+        versionNumber:
+          type: string
+        version:
+          type: string
+        url:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        associations:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+    FirmwareAssociation:
+      type: object
+      properties:
+        name:
+          type: string
+        partnerId:
+          type: string
+        email:
+          type: string
+        deviceTypeId:
+          type: string
+        deviceTypeName:
+          type: string
+        firmwareImageId:
+          type: string
+          description: An integer represented as a string; these values may exceed 53-bit precision.
   responses:
     Forbidden:
       description: The authenticated principal does not hold the required account or partner privilege.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource does not exist.
       content:
         application/json:
           schema:
@@ -1200,12 +1206,6 @@ components:
             error_description: Full authentication is required to access this resource
             service_name: ClientApi
             region: us-west-2
-    NotFound:
-      description: The requested resource does not exist.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http
