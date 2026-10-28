@@ -64,35 +64,128 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Afero, Inc. is a Los Altos, California IoT platform company founded in 2014 by Joe Britt and
-Shin Matsumura. Afero ships an end-to-end connected-product stack: ASR secure radio modules with a
-hardware root of trust and an embedded Hardware Security Module, the afLib MCU libraries and a
-Secure Linux Device SDK, Bluetooth Low Energy and Wi-Fi onboarding, the low-code Afero Profile
-Editor, Java (Android) and Swift (iOS) mobile SDKs with a Softhub, and the Afero Cloud.
+Afero, Inc. is a Los Altos, California IoT platform company founded in 2014 by Joe Britt and Shin Matsumura. Afero ships an end-to-end connected-product stack: ASR secure radio modules with a hardware root of trust and an embedded Hardware Security Module, the afLib MCU libraries and Secure Linux Device SDK for firmware, a Bluetooth Low Energy and Wi-Fi onboarding path, the Afero Profile Editor low-code device-modeling tool, Java (Android) and Swift (iOS) mobile SDKs with a Softhub, and the Afero Cloud — a RESTful API at api.afero.io that lists accounts and devices, reports real-time device state, executes attribute read and write actions on connected devices, and drives the over-the-air firmware pipeline. Afero has raised $73.2M from investors including Samsung Catalyst Fund and Crosspoint Capital Partners and reports millions of deployed devices across 200+ product categories in consumer, enterprise and industrial markets.
 
-- Website: https://www.afero.io/
-- Developer docs: https://afero-docs.readthedocs.io/en/latest/
-- Console: https://console.afero.io/
-- GitHub: https://github.com/aferodeveloper
-- Secondary-market listing: https://forgeglobal.com/afero_stock/
+**Areas:** Company · IoT · IoT Platform · Connected Devices · Device Management · Firmware · Over-the-Air Updates · Bluetooth Low Energy · Embedded Security · Hardware
 
-## APIs
+## Afero on APIs.io
 
-The Afero Cloud API (`https://api.afero.io`) is the RESTful control plane for the platform —
-OAuth 2.0 token issuance, the authenticated user and their account/partner privileges, device
-listing with state/tags/attributes expansions, asynchronous device attribute read and write
-actions, and the full over-the-air firmware pipeline (firmware types, the partner firmware pool,
-binary upload and repository move, device-type associations, firmware tags, firmware push).
+Everything profiled for Afero is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/afero/](https://apis.io/providers/afero/)** — or go straight to one of the APIs or properties below.
 
-## A note on the OpenAPI in this repo
+### APIs (4)
 
-**Afero publishes no machine-readable API description.** `https://api.afero.io/api-docs` and
-`https://api.afero.io/v1/openapi.json` both return HTTP 401 (probed 2026-08-02); no OpenAPI,
-Swagger, GraphQL, AsyncAPI or MCP surface is published on any Afero host, and no A2A agent card
-exists at either `/.well-known/agent-card.json` or `/.well-known/agent.json`.
+- [Afero Cloud Authentication API](https://apis.io/apis/afero/authentication-api/) — The OAuth 2.0 token endpoint for the Afero Cloud. A partner authenticates with HTTP Basic using the OAuth Client ID and Client Secret issued in the Afero…
+- [Afero Cloud Users API](https://apis.io/apis/afero/users-api/) — The Afero Cloud Users API returns the profile of the authenticated end-user: the Afero accounts the user can access and the privileges held on each, the…
+- [Afero Cloud Devices API](https://apis.io/apis/afero/devices-api/) — The Afero Cloud Devices API lists the devices linked to an Afero account and, via the expansions query parameter, returns device state (available, visible,…
+- [Afero Cloud OTA Firmware API](https://apis.io/apis/afero/ota-api/) — The Afero Over-the-Air (OTA) Update API lets a partner drive firmware releases from their own CI/CD pipeline instead of the OTA Manager web application. It…
 
-The documents in `openapi/` were **derived by API Evangelist** from Afero's public developer
-documentation — every path, method, parameter, payload field, response code and example is
-transcribed from the Afero Developer Docs. They carry `x-apievangelist-derived-from` and
-`x-apievangelist-provider-published: false` in `info`. They are not an Afero product and should
-not be presented as one.
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [afero](https://apis.io/servers/afero/afero/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Afero Agentic Access](https://apis.io/agentic-access/afero/afero-agentic-access/)
+
+#### Collections (4)
+
+Postman and Open Collection request collections.
+
+- [Afero Cloud Authentication API](https://apis.io/collections/afero/open-afero-authentication-api/)
+- [Afero Cloud Devices API](https://apis.io/collections/afero/open-afero-devices-api/)
+- [Afero Cloud Firmware OTA API](https://apis.io/collections/afero/open-afero-ota-api/)
+- [Afero Cloud Users API](https://apis.io/collections/afero/open-afero-users-api/)
+
+#### Overlays (5)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Afero Authentication Api Overlay](https://apis.io/overlays/afero/afero-authentication-api-overlay/)
+- [Afero Cloud Api Overlay](https://apis.io/overlays/afero/afero-cloud-api-overlay/)
+- [Afero Devices Api Overlay](https://apis.io/overlays/afero/afero-devices-api-overlay/)
+- [Afero Ota Api Overlay](https://apis.io/overlays/afero/afero-ota-api-overlay/)
+- [Afero Users Api Overlay](https://apis.io/overlays/afero/afero-users-api-overlay/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Afero Authentication](https://apis.io/security/afero/afero-authentication/)
+- [Afero Domain Security](https://apis.io/security/afero/afero-domain-security/)
+- [Afero Vulnerability Disclosure](https://apis.io/security/afero/afero-vulnerability-disclosure/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.afero.io/)
+- [Documentation](https://afero-docs.readthedocs.io/en/latest/)
+- [Getting started](https://afero-docs.readthedocs.io/en/latest/Tutorials/)
+- [API reference](https://afero-docs.readthedocs.io/en/latest/CloudAPIs/)
+- [Support](https://www.afero.io/html/home/contact-afero.html)
+- [Blog](https://www.afero.io/html/home/news.html)
+- [Security](https://afero.io/html/home/VDP.html)
+- [Terms of service](https://cdn.afero.io/tos/developer/v1/developer.html)
+- [Privacy policy](https://www.afero.io/html/home/privacy.html)
+- [GitHub](https://github.com/aferodeveloper)
+
+## API Evangelist rating
+
+**Kin Score 36.5** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 14.9 |
+| Contract governance | 4.5 |
+| Operational transparency | 28.9 |
+| Developer ergonomics | 66.1 |
+| Access clarity | 34.2 |
+
+**Agent readiness 21.4** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 25.4** — Energy & Utilities
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/afero/](https://apis.io/providers/afero/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Afero: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/afero/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
