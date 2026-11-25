@@ -114,6 +114,12 @@ OpenAPI overlays, including conversational phrasing for each operation.
 - [Afero Ota Api Overlay](https://apis.io/overlays/afero/afero-ota-api-overlay/)
 - [Afero Users Api Overlay](https://apis.io/overlays/afero/afero-users-api-overlay/)
 
+#### Governance rules (1)
+
+Spectral rulesets for the provider's contracts.
+
+- [Afero API Rules](https://apis.io/rules/afero/afero-rules/)
+
 #### Security (3)
 
 Authentication, trust centre, and vulnerability disclosure.
@@ -139,18 +145,18 @@ Links to the company's own pages. This repository publishes no copy of their spe
 
 ## API Evangelist rating
 
-**Kin Score 36.5** — thin · rubric 0.24.0 · scored 2026-10-17
+**Kin Score 39.2** — thin · rubric 0.28.1 · scored 2026-11-21
 
 | Facet | Score |
 |---|---|
 | Discoverability | 73.2 |
-| Contract quality | 14.9 |
-| Contract governance | 4.5 |
-| Operational transparency | 28.9 |
+| Contract quality | 14.1 |
+| Contract governance | 18.2 |
+| Operational transparency | 28.6 |
 | Developer ergonomics | 66.1 |
-| Access clarity | 34.2 |
+| Access clarity | 40.4 |
 
-**Agent readiness 21.4** — agent-aware
+**Agent readiness 27.0** — agent-aware
 
 | Agent-readiness dimension | Result |
 |---|---|
@@ -160,7 +166,7 @@ Links to the company's own pages. This repository publishes no copy of their spe
 | MCP Server | — |
 | Auth Clarity | bearer (partial credit) |
 | Idempotency | — |
-| Error Semantics | derived (partial credit) |
+| Error Semantics | verified |
 | OpenAPI Examples | partial |
 | Rate Limit Signal | — |
 | Event Surface Described | — |
@@ -173,6 +179,12 @@ Links to the company's own pages. This repository publishes no copy of their spe
 | Protected Resource Metadata | — |
 | Dynamic Client Registration | — |
 | Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | distinct |
+| MCP Tool Quality | na |
+| Onboarding Descriptor | — |
+| Dns Aid Index | na |
+| Markdown Negotiation | yes |
 
 **Regulatory alignment 25.4** — Energy & Utilities
 
